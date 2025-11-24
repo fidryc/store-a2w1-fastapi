@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Literal
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
@@ -25,6 +26,17 @@ class Settings(BaseSettings):
     PROD_DB_USER: str
     PROD_DB_PASS: str
     
+    EXP_SEC_ACCESS_TOKEN: int
+    EXP_DAYS_REFRESH_TOKEN: int
+    
+    PRIVATE_SECRET_KEY_PATH: str
+    PUBLIC_SECRET_KEY_PATH: str
+    
+    ALGORITM: str
+    
+    JWT_ACCESS_TOKEN_NAME: str
+    JWT_REFRESH_TOKEN_NAME: str
+    
     __DB_URL = None
     
     @property
@@ -38,6 +50,21 @@ class Settings(BaseSettings):
             self.__DB_URL = DB_URLS[self.MODE]
         return self.__DB_URL
     
+    __PRIVATE_SECRET_KEY = None
+    __PUBLIC_SECRET_KEY = None
+    
+    @property
+    def PRIVATE_SECRET_KEY(self) -> str:
+        if not self.__PRIVATE_SECRET_KEY:
+            self.__PRIVATE_SECRET_KEY = Path(self.PRIVATE_SECRET_KEY_PATH).read_text()
+        return self.__PRIVATE_SECRET_KEY
+    
+    @property
+    def PUBLIC_SECRET_KEY(self) -> str:
+        if not self.__PUBLIC_SECRET_KEY:
+            self.__PUBLIC_SECRET_KEY = Path(self.PUBLIC_SECRET_KEY_PATH).read_text()
+        return self.__PUBLIC_SECRET_KEY
+        
     class Config:
         env_file = ".env"
         

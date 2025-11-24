@@ -1,7 +1,7 @@
 from sqladmin import ModelView
 from app.db.models.models import (
-    Size, Material, Color, BaseCategory, SubCategory,
-    Product, ProductVariant, Collection, CollectionProduct, ProductPhoto
+    CollectionCategory, Photo, Size, Material, Color, BaseCategory, SubCategory,
+    Product, ProductVariant, Collection, CollectionProduct, ProductPhoto, User
 )
 
 
@@ -83,8 +83,27 @@ class ProductPhotoAdmin(ModelView, model=ProductPhoto):
     column_list = [
         ProductPhoto.id,
         ProductPhoto.product_id,
-        ProductPhoto.file_path,
+        ProductPhoto.photo_id,
         ProductPhoto.is_primary,
         ProductPhoto.sort_order
     ]
     column_sortable_list = [ProductPhoto.id, ProductPhoto.sort_order]
+    
+class PhotoAdmin(ModelView, model=Photo):
+    column_list = [
+        Photo.id,
+        Photo.file_path,
+    ]
+    column_sortable_list = [Photo.id, Photo.file_path]
+    
+    can_delete = False
+    can_edit = False
+    can_create = False
+    
+
+class UserAdmin(ModelView, model=User):
+    column_list = [c for c in User.__table__.columns]
+    
+
+class CollecctionCategoryAdmin(ModelView, model=CollectionCategory):
+    column_list = [c for c in CollectionCategory.__table__.columns]

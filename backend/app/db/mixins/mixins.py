@@ -2,6 +2,8 @@ from typing import Generic, TypeVar, Type
 from pydantic import BaseModel
 
 from app.schemas.dto import (
+    CollectionCategoryDTO,
+    PhotoDTO,
     SizeDTO,
     MaterialDTO,
     ColorDTO,
@@ -12,6 +14,7 @@ from app.schemas.dto import (
     CollectionDTO,
     CollectionProductDTO,
     ProductPhotoDTO,
+    UserDTO,
 )
 
 
@@ -22,6 +25,8 @@ class Mixin(Generic[DTO]):
     
     @classmethod
     def serialize_to_dto(cls, obj, *, from_attributes: bool=True) -> DTO:
+        if isinstance(obj, dict):
+            return cls.dto.model_construct(obj)
         return cls.dto.model_validate(obj, from_attributes=from_attributes)
     
 
@@ -53,6 +58,9 @@ class ProductVariantMixin(Mixin[ProductVariantDTO]):
     dto = ProductVariantDTO
 
 
+class CollectionCategoryMixin(Mixin[CollectionCategoryDTO]):
+    dto = CollectionCategoryDTO
+
 class CollectionMixin(Mixin[CollectionDTO]):
     dto = CollectionDTO
 
@@ -63,5 +71,12 @@ class CollectionProductMixin(Mixin[CollectionProductDTO]):
 
 class ProductPhotoMixin(Mixin[ProductPhotoDTO]):
     dto = ProductPhotoDTO
+    
+class PhotoMixin(Mixin[PhotoDTO]):
+    dto = PhotoDTO
+    
+class UserMixin(Mixin[UserDTO]):
+    dto = UserDTO
+
 
     

@@ -1,3 +1,4 @@
+from re import S
 from typing import Optional
 from pydantic import BaseModel
 
@@ -5,7 +6,7 @@ from pydantic import BaseModel
 class SizeDTO(BaseModel):
     id: int
     title: str
-    base_category_id: Optional[int]
+    base_category_id: Optional[int] = None
 
 
 class MaterialDTO(BaseModel):
@@ -52,10 +53,23 @@ class ProductVariantDTO(BaseModel):
     quantity: int
 
 
+class PhotoDTO(BaseModel):
+    id: int
+    file_path: str
+    
+    
+class CollectionCategoryDTO(BaseModel):
+    id: int
+    title: str
+    description: str
+    sort_order: int
+
 class CollectionDTO(BaseModel):
     id: int
     title: str
     description: Optional[str]
+    photo: PhotoDTO
+    collection_category: CollectionCategoryDTO
 
 
 class CollectionProductDTO(BaseModel):
@@ -70,3 +84,10 @@ class ProductPhotoDTO(BaseModel):
     file_path: str
     is_primary: bool
     sort_order: int
+    
+    
+class UserDTO(BaseModel):
+    id: int
+    email: str
+    hashed_password: str
+    role: str | None

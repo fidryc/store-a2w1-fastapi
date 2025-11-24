@@ -48,11 +48,14 @@ class ProductVariantSchema(BaseModel):
 class CollectionSchema(BaseModel):
     title: str
     description: Optional[str]
+    photo_id: int
+    
 
 
 class CollectionProductSchema(BaseModel):
     collection_id: int
     product_id: int
+    
 
 
 class ProductPhotoSchema(BaseModel):

@@ -2,7 +2,7 @@ from sqlalchemy import String, Integer, ForeignKey, Numeric, Boolean, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import relationship
 from typing import Optional
-from app.db.mixins.mixins import BaseCategoryMixin, CollectionMixin, CollectionProductMixin, Mixin, ProductMixin, ProductPhotoMixin, ProductVariantMixin, SizeMixin, MaterialMixin, ColorMixin, SubCategoryMixin
+from app.db.mixins.mixins import BaseCategoryMixin, CollectionCategoryMixin, CollectionMixin, CollectionProductMixin, Mixin, PhotoMixin, ProductMixin, ProductPhotoMixin, ProductVariantMixin, SizeMixin, MaterialMixin, ColorMixin, SubCategoryMixin, UserMixin
 
 
 class Base(Mixin, DeclarativeBase):
@@ -102,31 +102,49 @@ class ProductVariant(ProductVariantMixin, Base):
     quantity: Mapped[int] = mapped_column(Integer, default=0)
 
     product = relationship("Product")
-    size = relationship("Size")
+    size = relationship("Size", lazy="select")
     color = relationship("Color")
     
     def __str__(self):
         return f"Product variant #{self.id}"
 
 
+class CollectionCategory(CollectionCategoryMixin, Base):
+    __tablename__ = "collection_categories"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(32))
+    description: Mapped[Optional[str]] = mapped_column(Text)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0)
+    
+    def __str__(self):
+        return f"Collection category: {self.title}"
+    
+    
 class Collection(CollectionMixin, Base):
     __tablename__ = "collections"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(255))
     description: Mapped[Optional[str]] = mapped_column(Text)
+    photo_id: Mapped[int] = mapped_column(ForeignKey("photos.id"), index=True)
+    collection_category_id: Mapped[int] = mapped_column(ForeignKey("collection_categories.id"), index=True)
+    
+    photo = relationship("Photo")
+    collection_category = relationship("CollectionCategory")
     
     def __str__(self):
         return f"Collection: {self.title}"
+    
 
 
 class CollectionProduct(CollectionProductMixin, Base):
     __tablename__ = "collection_products"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    collection_id: Mapped[int] = mapped_column(ForeignKey("collections.id"))
-    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
-
+    collection_id: Mapped[int] = mapped_column(ForeignKey("collections.id"), index=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
+    
     product = relationship("Product")
     collection = relationship("Collection")
 
@@ -135,8 +153,29 @@ class ProductPhoto(ProductPhotoMixin, Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
-    file_path: Mapped[str] = mapped_column(String(500), unique=True)
+    photo_id: Mapped[int] = mapped_column(ForeignKey("photos.id"), index=True)
     is_primary: Mapped[bool] = mapped_column(Boolean, default=False)
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
     
     product = relationship("Product")
+    photo = relationship("Photo")
+    
+class Photo(PhotoMixin, Base):
+    __tablename__ = "photos"
+
+    def __str__(self):
+        return f"{self.file_path}"
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    file_path: Mapped[str] = mapped_column(String(500), unique=True)
+    
+
+class User(UserMixin, Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(String(256), unique=True)
+    hashed_password: Mapped[str] = mapped_column(String(256), nullable=False)
+    role: Mapped[str] = mapped_column(String(32), nullable=True)
+    
+
