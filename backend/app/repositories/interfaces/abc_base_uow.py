@@ -2,7 +2,7 @@ from typing import Protocol, TypeVar, Generic
 
 from app.repositories.interfaces.abc_repo.abc_base_category_repo import IBaseCategoryRepository
 from app.repositories.interfaces.abc_repo.abc_collection_category import ICollectionCategoryRepository
-from app.repositories.interfaces.abc_repo.abc_collection_product_repo import ICollectionProductRepository
+# from app.repositories.interfaces.abc_repo.abc_collection_product_repo import ICollectionProductRepository
 from app.repositories.interfaces.abc_repo.abc_collection_repo import ICollectionRepository
 from app.repositories.interfaces.abc_repo.abc_color_repo import IColorRepository
 from app.repositories.interfaces.abc_repo.abc_material_repo import IMaterialRepository
@@ -27,7 +27,7 @@ class IBaseUOW(Protocol):
         self.__product_repo: IProductRepository | None = None
         self.__product_variant_repo: IProductVariantRepository | None = None
         self.__collection_repo: ICollectionRepository | None = None
-        self.__collection_product_repo: ICollectionProductRepository | None = None
+        # self.__collection_product_repo: ICollectionProductRepository | None = None
         self.__collection_category_repo: ICollectionCategoryRepository | None = None
         self.__product_photo_repo: IProductPhotoRepository | None = None
         self.__photo_repo: IPhotoRepository | None = None
@@ -68,8 +68,8 @@ class IBaseUOW(Protocol):
     @property
     def collection_repo(self) -> ICollectionRepository: ...
 
-    @property
-    def collection_product_repo(self) -> ICollectionProductRepository: ...
+    # @property
+    # def collection_product_repo(self) -> ICollectionProductRepository: ...
     
     @property
     def collection_category_repo(self) -> ICollectionCategoryRepository: ...

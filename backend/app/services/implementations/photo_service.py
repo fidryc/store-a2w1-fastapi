@@ -40,7 +40,7 @@ class PhotoService:
                 "Ошибка добавления фото",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             ) from e
-        async with aiofiles.open(f"app/statics/images/{file_path}.jpg", "wb") as f:
+        async with aiofiles.open(f"app/static/images/{file_path}.jpg", "wb") as f:
             await f.write(file)
 
         return id
@@ -49,7 +49,7 @@ class PhotoService:
     async def delete(self, file_path: str) -> list[int]:
         """Удаление фотки с сервера и из базы"""
         self.__validate_file_name(file_path)
-        path = f"app/statics/images/{file_path}.jpg"
+        path = f"app/static/images/{file_path}.jpg"
         if not os.path.exists(path):
             raise PhotoServiceException(
                 "Такого файла не существующего файла",

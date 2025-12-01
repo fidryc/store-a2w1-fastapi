@@ -40,19 +40,12 @@ def set_token(response: Response, token: str, type):
             settings.JWT_REFRESH_TOKEN_NAME,
             token,
             httponly=True,
-            max_age=int(timedelta(days=settings.EXP_DAYS_REFRESH_TOKEN).total_seconds()),
+            max_age=int(timedelta(seconds=settings.EXP_DAYS_REFRESH_TOKEN).total_seconds()),
         )
 
 
-def get_token(type_: Literal["access", "refresh"], name_token: str, request: Request) -> dict:
+def get_token_payload(type_: Literal["access", "refresh"], token: str) -> dict:
     """Получает payload access токена из cookie"""
-    exc = {
-        "access": AbsenceAccessJWTExc,
-        "refresh": AbsenceRefreshJWTExc
-    }
-    token = request.cookies.get(name_token, None)
-    if not token:
-        raise exc[type_]("Нет токена для проверки аккаунт")
     try:
         payload: dict = decode(
             token,
@@ -60,8 +53,6 @@ def get_token(type_: Literal["access", "refresh"], name_token: str, request: Req
             settings.ALGORITM,
             options={"verify_exp": False},
         )
-        if payload.get("type", None) != type_:
-            raise ValueError(f"Токен {type_} jwt подделан")
         return payload
     except PyJWTError:
         logger.warning(
@@ -70,8 +61,8 @@ def get_token(type_: Literal["access", "refresh"], name_token: str, request: Req
         raise ValueError("Ошибка декодировки access токена")
 
 
-def validate_payload_fields(token_payload: dict):
-    """Проверка атрибутов payload токена на правильность типов"""
+def validate_payload_fields(token_payload: dict, type_: Literal["access", "refresh"]):
+    """Полная валидация payload"""
     jti = token_payload.get("jti", None)
     if not jti or not isinstance(jti, str):
         raise ValueError("Неправильное поле jti")
@@ -81,16 +72,33 @@ def validate_payload_fields(token_payload: dict):
     exp = token_payload.get("exp", None)
     if not exp or not isinstance(exp, float):
         raise ValueError("Неправильное поле exp")
+    validate_exp_token(type_, exp)
     type = token_payload.get("type", None)
     if not type or type not in ("access", "refresh"):
         raise ValueError("Неправильное поле type")
 
 
-def validate_exp_token(type_: Literal["access", "refresh"], payload: dict) -> None:
+def validate_exp_token(type_: Literal["access", "refresh"], exp: float) -> None:
     exc = {
         "access": TimeExpireAccessJWTExc,
-        "refresh": TimeExpireRefreshJWTExc
+        "refresh": TimeExpireAccessJWTExc
     }
-    """Выбрасывает исключение TimeExpireJWTExc если вышло время жизни токена"""
-    if datetime.now(timezone.utc).timestamp() > payload["exp"]:
-        raise exc[type_](f"Время токена истекло {payload["type"]}")
+    """Выбрасывает исключение TimeExpireAccessJWTExc | TimeExpireAccessJWTExc если вышло время жизни токена"""
+    if datetime.now(timezone.utc).timestamp() > exp:
+        raise exc[type_](f"Время токена истекло {type_}")
+
+
+def create_delete_cookie_headers():
+    """Создает заголовки для удаления куки"""
+    # Для удаления куки устанавливаем Max-Age=0 и пустое значение
+    access_cookie = f"{settings.JWT_ACCESS_TOKEN_NAME}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax"
+    refresh_cookie = f"{settings.JWT_REFRESH_TOKEN_NAME}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax"
+    
+    # Добавьте Secure, если используете HTTPS
+    if getattr(settings, 'COOKIE_SECURE', True):
+        access_cookie += "; Secure"
+        refresh_cookie += "; Secure"
+    
+    return {
+        "Set-Cookie": f"{access_cookie}, {refresh_cookie}"
+    }

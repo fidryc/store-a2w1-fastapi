@@ -5,5 +5,5 @@ DTO = TypeVar("DTO")
 Model = TypeVar("MODEL")
 
 class ICollectionRepository(IBaseRepository[DTO, Model]):
-    async def collections_with_category_and_photo(self) -> list[tuple[Any]]:
+    async def collections_with_category_and_photo(self, **filters) -> list[tuple[Any]]:
         ...

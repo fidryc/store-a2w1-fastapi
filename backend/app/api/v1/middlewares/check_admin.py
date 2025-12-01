@@ -4,20 +4,53 @@ from fastapi.responses import JSONResponse
 
 from app.repositories.implementations.sqlalchemy.base_uow import BaseUOW
 from app.services.implementations.user_service import UserService
+from app.services.exceptions.user import UserServiceException
+from app.schemas.dataclasses import AuthTokens
+from app.core.config import settings
+from app.utils.jwt import set_token, create_delete_cookie_headers
 
 
 class IsAdminMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        response = await call_next(request)
-
-        # Проверяем роль пользователя
         async with BaseUOW() as uow:
             user_service = UserService(uow)
-            user = await user_service.authentication(request=request, response=response)
-            if user and user.role == "admin":
-                return response
-
-            return JSONResponse(
-                status_code=403,
-                content={"detail": "У вас нет прав для входа в админ-панель"}
+            auth_tokens = AuthTokens(
+                access_token=request.cookies.get(settings.JWT_ACCESS_TOKEN_NAME),
+                refresh_token=request.cookies.get(settings.JWT_REFRESH_TOKEN_NAME),
+                is_access_token_update=False,
+                is_refresh_token_update=False
             )
+
+            try:
+                new_auth_tokens = await user_service.refresh_tokens(auth_tokens)
+                user = await user_service.get_user_from_token(new_auth_tokens)
+
+                if user.role != "admin":
+                    return JSONResponse(
+                        status_code=403,
+                        content={"detail": "Нет прав для входа в админ-панель"}
+                    )
+
+            except UserServiceException:
+                return JSONResponse(
+                    status_code=401,
+                    content={"detail": "Требуется авторизация"},
+                    # headers=create_delete_cookie_headers()
+                )
+
+        response = await call_next(request)
+
+        if new_auth_tokens.is_access_token_update:
+            set_token(
+                response=response,
+                token=new_auth_tokens.access_token,
+                type="access"
+            )
+        if new_auth_tokens.is_refresh_token_update:
+            set_token(
+                response=response,
+                token=new_auth_tokens.refresh_token,
+                type="refresh"
+            )
+
+        return response

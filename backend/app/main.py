@@ -1,12 +1,13 @@
 import datetime
 from fastapi import FastAPI, Response, Request
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware import Middleware
 from sqladmin import Admin
 
 from app.db.session import engine
 from app.api.admin.views import (
     CollecctionCategoryAdmin, PhotoAdmin, SizeAdmin, MaterialAdmin, ColorAdmin, BaseCategoryAdmin, SubCategoryAdmin,
-    ProductAdmin, ProductVariantAdmin, CollectionAdmin, CollectionProductAdmin, ProductPhotoAdmin, UserAdmin
+    ProductAdmin, ProductVariantAdmin, CollectionAdmin, ProductPhotoAdmin, UserAdmin
 )
 from app.repositories.implementations.sqlalchemy.base_uow import BaseUOW
 from app.services.implementations.collection_service import CollectionService
@@ -17,6 +18,8 @@ from app.api.v1.dependency.user import CurrentUserDep
 
 from app.api.v1.routers.images import router as images_router
 from app.api.v1.routers.users import router as users_router
+from app.api.v1.routers.frontend import router as frontend_router
+from app.api.v1.routers.test import router as test_router
 from app.core.logger import logger
 
 from fastapi.openapi.docs import get_swagger_ui_html
@@ -28,9 +31,14 @@ app = FastAPI(
     redoc_url=None,
     openapi_url="/openapi.json"
 )
- 
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+# Подключение роутеров
+app.include_router(frontend_router) 
 app.include_router(images_router)
 app.include_router(users_router)
+app.include_router(test_router)
 
 admin = Admin(app, engine, middlewares=[Middleware(IsAdminMiddleware),])
 
@@ -44,7 +52,6 @@ admin.add_view(ProductAdmin)
 admin.add_view(ProductVariantAdmin)
 admin.add_view(CollecctionCategoryAdmin)
 admin.add_view(CollectionAdmin)
-admin.add_view(CollectionProductAdmin)
 admin.add_view(ProductPhotoAdmin)
 admin.add_view(UserAdmin)
 admin.add_view(PhotoAdmin)
@@ -54,7 +61,8 @@ async def test():
     async with BaseUOW() as uow:
         pr_service = ProductService(uow)
         cl_service = CollectionService(uow, product_service=pr_service)
-        print(await cl_service.categories_with_cats())
+        # print(await cl_service.get_products_by_collection_id(collection_id=))
+        print(await pr_service.get_product_by_id(id=1, desc_photo=True))
     
 @app.middleware("http")
 async def check_time(request: Request, call_next):
@@ -66,7 +74,7 @@ async def check_time(request: Request, call_next):
 
 # Проверка admin роли у пользователя перед тем как отдавать swagger
 @app.get("/docs", include_in_schema=False)
-async def custom_docs(user: CurrentUserDep):
+async def custom_docs(user: CurrentUserDep, response: Response):
     if user.role != "admin":
         from fastapi.responses import HTMLResponse
 
@@ -75,8 +83,11 @@ async def custom_docs(user: CurrentUserDep):
             status_code=403
         )
     else:
-        return get_swagger_ui_html(
-            openapi_url="/openapi.json",
-            title="Docs"
-        )
-        
+        html = get_swagger_ui_html(openapi_url="/openapi.json", title="Docs")
+        for k, v in html.headers.items():
+            response.headers[k] = v
+
+            response.status_code = html.status_code
+            response.body = html.body
+
+        return response

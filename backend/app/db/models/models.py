@@ -2,7 +2,7 @@ from sqlalchemy import String, Integer, ForeignKey, Numeric, Boolean, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import relationship
 from typing import Optional
-from app.db.mixins.mixins import BaseCategoryMixin, CollectionCategoryMixin, CollectionMixin, CollectionProductMixin, Mixin, PhotoMixin, ProductMixin, ProductPhotoMixin, ProductVariantMixin, SizeMixin, MaterialMixin, ColorMixin, SubCategoryMixin, UserMixin
+from app.db.mixins.mixins import BaseCategoryMixin, CollectionCategoryMixin, CollectionMixin, Mixin, PhotoMixin, ProductMixin, ProductPhotoMixin, ProductVariantMixin, SizeMixin, MaterialMixin, ColorMixin, SubCategoryMixin, UserMixin
 
 
 class Base(Mixin, DeclarativeBase):
@@ -81,12 +81,15 @@ class Product(ProductMixin, Base):
     base_category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("base_categories.id"), index=True)
     sub_category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("sub_categories.id"), index=True)
     material_id: Mapped[Optional[int]] = mapped_column(ForeignKey("materials.id"), index=True)
+    collection_id: Mapped[Optional[int]] = mapped_column(ForeignKey("collections.id"), index=True, nullable=True)
     simple_quantity: Mapped[int] = mapped_column(Integer, default=0)
     
     material = relationship("Material")
     base_category = relationship("BaseCategory")
     sub_category = relationship("SubCategory")
+    collection = relationship("Collection")
 
+    photos = relationship("ProductPhoto")
     def __str__(self):
         return f"Product: {self.title}"
 
@@ -138,15 +141,15 @@ class Collection(CollectionMixin, Base):
     
 
 
-class CollectionProduct(CollectionProductMixin, Base):
-    __tablename__ = "collection_products"
+# class CollectionProduct(CollectionProductMixin, Base):
+#     __tablename__ = "collection_products"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    collection_id: Mapped[int] = mapped_column(ForeignKey("collections.id"), index=True)
-    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
+#     id: Mapped[int] = mapped_column(primary_key=True)
+#     collection_id: Mapped[int] = mapped_column(ForeignKey("collections.id"), index=True)
+#     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
     
-    product = relationship("Product")
-    collection = relationship("Collection")
+#     product = relationship("Product", lazy="select")
+#     collection = relationship("Collection")
 
 class ProductPhoto(ProductPhotoMixin, Base):
     __tablename__ = "product_photos"
@@ -158,7 +161,7 @@ class ProductPhoto(ProductPhotoMixin, Base):
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
     
     product = relationship("Product")
-    photo = relationship("Photo")
+    photo = relationship("Photo", lazy="select")
     
 class Photo(PhotoMixin, Base):
     __tablename__ = "photos"

@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from app.repositories.implementations.sqlalchemy.repo.base_category_repo import BaseCategoryRepository
 from app.repositories.implementations.sqlalchemy.repo.collection_category import CollectionCategoryRepository
-from app.repositories.implementations.sqlalchemy.repo.collection_product_repo import CollectionProductRepository
+# from app.repositories.implementations.sqlalchemy.repo.collection_product_repo import CollectionProductRepository
 from app.repositories.implementations.sqlalchemy.repo.collection_repo import CollectionRepository
 from app.repositories.implementations.sqlalchemy.repo.color_repo import ColorRepository
 from app.repositories.implementations.sqlalchemy.repo.material_repo import MaterialRepository
@@ -31,7 +31,7 @@ class BaseUOW(IBaseUOW):
         self.__product_repo: ProductRepository | None = None
         self.__product_variant_repo: ProductVariantRepository | None = None
         self.__collection_repo: CollectionRepository | None = None
-        self.__collection_product_repo: CollectionProductRepository | None = None
+        # self.__collection_product_repo: CollectionProductRepository | None = None
         self.__collection_category_repo: CollectionCategoryRepository | None = None
         self.__product_photo_repo: ProductPhotoRepository | None = None
         self.__photo_repo: PhotoRepository | None = None
@@ -49,8 +49,6 @@ class BaseUOW(IBaseUOW):
     async def __aexit__(self, exc_type, exc, tb):
         if exc_type:
             await self.rollback()
-        else:
-            await self.commit()
         await self.__session.close()
 
         # возвращаем False, чтобы FastAPI получил оригинальное исключение
@@ -114,11 +112,11 @@ class BaseUOW(IBaseUOW):
             self.__collection_repo = CollectionRepository(self.__session)
         return self.__collection_repo
 
-    @property
-    def collection_product_repo(self) -> CollectionProductRepository:
-        if not self.__collection_product_repo:
-            self.__collection_product_repo = CollectionProductRepository(self.__session)
-        return self.__collection_product_repo
+    # @property
+    # def collection_product_repo(self) -> CollectionProductRepository:
+    #     if not self.__collection_product_repo:
+    #         self.__collection_product_repo = CollectionProductRepository(self.__session)
+    #     return self.__collection_product_repo
     
     @property
     def collection_category_repo(self) -> CollectionCategoryRepository:

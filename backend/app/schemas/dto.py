@@ -1,4 +1,3 @@
-from re import S
 from typing import Optional
 from pydantic import BaseModel
 
@@ -33,17 +32,12 @@ class SubCategoryDTO(BaseModel):
     slug: str
 
 
-class ProductDTO(BaseModel):
+class PhotoDTO(BaseModel):
     id: int
-    title: str
-    description: Optional[str]
-    base_price: float
-    base_category_id: Optional[int]
-    sub_category_id: Optional[int]
-    material_id: Optional[int]
-    simple_quantity: int
-
-
+    file_path: str
+    
+    
+    
 class ProductVariantDTO(BaseModel):
     id: int
     product_id: int
@@ -51,11 +45,6 @@ class ProductVariantDTO(BaseModel):
     color_id: Optional[int]
     price_modifier: float
     quantity: int
-
-
-class PhotoDTO(BaseModel):
-    id: int
-    file_path: str
     
     
 class CollectionCategoryDTO(BaseModel):
@@ -72,18 +61,21 @@ class CollectionDTO(BaseModel):
     collection_category: CollectionCategoryDTO
 
 
-class CollectionProductDTO(BaseModel):
-    id: int
-    collection_id: int
-    product_id: int
+# class CollectionProductDTO(BaseModel):
+#     id: int
+#     collection_id: int
+#     product_id: int
+    
+#     product: ProductDTO
 
 
 class ProductPhotoDTO(BaseModel):
     id: int
     product_id: int
-    file_path: str
     is_primary: bool
     sort_order: int
+    
+    photo: PhotoDTO 
     
     
 class UserDTO(BaseModel):
@@ -91,3 +83,17 @@ class UserDTO(BaseModel):
     email: str
     hashed_password: str
     role: str | None
+    
+    
+class ProductDTO(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    base_price: float
+    base_category_id: Optional[int]
+    sub_category_id: Optional[int]
+    material_id: Optional[int]
+    collection_id: Optional[int]
+    simple_quantity: int
+    
+    photos: list[ProductPhotoDTO]

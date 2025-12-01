@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     JWT_ACCESS_TOKEN_NAME: str
     JWT_REFRESH_TOKEN_NAME: str
     
+    COOKIE_SECURE: bool
+    
     __DB_URL = None
     
     @property

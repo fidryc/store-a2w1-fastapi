@@ -1,0 +1,382 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+nav {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    flex: 1;
+    margin-left: 50px;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    flex: 1;
+    align-items: center;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-self: flex-start;
+}
+
+.nav-item > a {
+    color: #ff0000;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.nav-item > a:hover {
+    opacity: 0.8;
+}
+
+.dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-left: 0;
+}
+
+.dropdown a {
+    display: block;
+    color: #ff0000;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+.dropdown a:hover {
+    opacity: 0.8;
+}
+
+.telegram {
+    color: #ff0000;
+    text-decoration: none;
+    margin-left: auto;
+    text-decoration: underline;
+}
+
+.telegram:hover {
+    opacity: 0.8;
+}
+
+/* Burger menu */
+.burger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+    z-index: 1001;
+}
+
+.burger span {
+    width: 25px;
+    height: 3px;
+    background: #ff0000;
+    transition: 0.3s;
+}
+
+.close-menu {
+    display: none;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    header {
+        padding: 20px;
+        align-items: center;
+    }
+    
+    .burger {
+        display: flex;
+    }
+    
+    nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background: #000;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 80px 20px 20px;
+        gap: 0;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        margin-left: 0;
+        border-right: 1px solid #ff0000;
+        overflow-y: auto;
+    }
+    
+    nav.active {
+        left: 0;
+    }
+    
+    .close-menu {
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: #ff0000;
+        font-size: 30px;
+        cursor: pointer;
+        line-height: 1;
+    }
+    
+    .nav-menu {
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+    }
+    
+    .nav-item {
+        width: 100%;
+        border-bottom: 1px solid #333;
+        padding: 15px 0;
+        gap: 10px;
+    }
+    
+    .nav-item > a {
+        padding: 0;
+    }
+    
+    .dropdown {
+        padding-left: 20px;
+        gap: 8px;
+    }
+    
+    .dropdown a {
+        padding: 0;
+        color: #ccc;
+    }
+    
+    .dropdown a:hover {
+        color: #ff0000;
+    }
+    
+    .telegram {
+        margin-top: 20px;
+        padding: 15px 0;
+        width: 100%;
+        border-top: 1px solid #333;
+    }
+}
+
+/* Footer styles */
+footer {
+    margin-top: 100px;
+    padding: 0 50px 50px;
+}
+
+/* FAQ Section */
+.faq-section {
+    margin-bottom: 80px;
+}
+
+.faq-title {
+    font-size: 48px;
+    color: #ff0000;
+    margin-bottom: 40px;
+    font-weight: normal;
+    text-transform: lowercase;
+}
+
+.faq-item {
+    border-bottom: 1px solid #333;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 0;
+    cursor: pointer;
+    color: #ff0000;
+    font-size: 18px;
+}
+
+.faq-question:hover {
+    opacity: 0.8;
+}
+
+.faq-icon {
+    font-size: 30px;
+    color: #ff0000;
+    transition: transform 0.4s ease;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+    padding-bottom: 25px;
+}
+
+.faq-answer p {
+    color: #ccc;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* About Section */
+.about-section {
+    border-top: 1px solid #333;
+    padding-top: 40px;
+}
+
+.about-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.about-title {
+    font-size: 64px;
+    color: #fff;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.arrow-icon {
+    font-size: 64px;
+    color: #fff;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 40px;
+}
+
+.about-year {
+    font-size: 18px;
+    color: #fff;
+}
+
+.about-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.about-text p {
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.about-text .about-main {
+    color: #ff0000;
+    font-size: 18px;
+}
+
+.about-links {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.link-telegram,
+.link-instagram {
+    color: #ff0000;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.link-telegram:hover,
+.link-instagram:hover {
+    opacity: 0.8;
+}
+
+.about-text-small p {
+    color: #ff0000;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.design-credit {
+    color: #fff;
+    font-size: 16px;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    footer {
+        padding: 0 20px 30px;
+        margin-top: 50px;
+    }
+
+    .faq-title {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .faq-question {
+        font-size: 16px;
+        padding: 20px 0;
+    }
+
+    .about-title {
+        font-size: 36px;
+    }
+
+    .arrow-icon {
+        font-size: 36px;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .about-columns {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .about-links {
+        grid-column: 1;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}

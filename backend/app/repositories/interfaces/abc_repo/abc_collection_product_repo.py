@@ -1,7 +1,7 @@
-from typing import Any, TypeVar
-from app.repositories.interfaces.abc_base_repo import IBaseRepository
+# from typing import Any, TypeVar
+# from app.repositories.interfaces.abc_base_repo import IBaseRepository
 
-DTO = TypeVar("DTO")
-Model = TypeVar("MODEL")
+# DTO = TypeVar("DTO")
+# Model = TypeVar("MODEL")
 
-class ICollectionProductRepository(IBaseRepository[DTO, Model]): ...
+# class ICollectionProductRepository(IBaseRepository[DTO, Model]): ...

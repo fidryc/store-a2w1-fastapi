@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2W1</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <img src="/static/images/logo.png" alt="A2W1" class="img-logo">
+            </a>
+        </div>
+        
+        <div class="burger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <nav id="nav">
+            <span class="close-menu" onclick="toggleMenu()">×</span>
+            <ul class="nav-menu">
+                {% if large_collections %}
+                <li class="nav-item">
+                    <a href="/category/{{ large_collections[0].id }}">коллекции</a>
+                    <div class="dropdown">
+                        {% for collection in large_collections[1] %}
+                        <a href="/collection/{{ collection.id }}">{{ collection.title }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+                {% endif %}
+                
+                {% if capsule_collections %}
+                <li class="nav-item">
+                    <a href="/category/{{ capsule_collections[0].id }}">капсула</a>
+                    <div class="dropdown">
+                        {% for collection in capsule_collections[1] %}
+                        <a href="/collection/{{ collection.id }}">{{ collection.title }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+                {% endif %}
+                
+                <li class="nav-item">
+                    <a href="/products?category=posters">постеры/стикеры</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about">а вы кто</a>
+                </li>
+            </ul>
+            <a href="#" class="telegram">telegram</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Контент страницы -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <!-- Частые вопросы -->
+        <section class="faq-section">
+            <h2 class="faq-title">частые вопросы</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Как выбрать подходящую диету для своего типа тела?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Чтобы выбрать подходящую диету, учитывайте свои цели: хотите ли вы снизить вес, нарастить мышцы или поддерживать здоровье. Лучше всего проконсультироваться с диетологом для индивидуального подхода.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Сколько раз в день нужно пить воду?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Рекомендуется пить воду регулярно в течение дня, примерно 8 стаканов (2 литра). Количество может варьироваться в зависимости от активности и климата.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Можно ли похудеть без физических упражнений?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Да, похудение возможно за счёт правильного питания и дефицита калорий. Однако физические упражнения помогают ускорить процесс и улучшить общее здоровье.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Как избежать срывов на диете?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Планируйте приёмы пищи заранее, не ограничивайте себя слишком строго и позволяйте небольшие отступления. Важно сохранять баланс и не воспринимать диету как наказание.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Как правильно подсчитывать калории?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Используйте приложения для подсчёта калорий, взвешивайте порции и изучайте этикетки продуктов. Со временем вы научитесь оценивать калорийность на глаз.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Нужно ли есть завтрак каждый день?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Завтрак важен для запуска метаболизма, но если вы практикуете интервальное голодание, можно пропустить его. Главное — общий баланс питания за день.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Что делать, если у меня есть пищевые аллергии?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Обязательно проконсультируйтесь с врачом и диетологом. Исключите аллергены из рациона и ищите безопасные альтернативы продуктам.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Как поддерживать мотивацию на протяжении всего процесса?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Ставьте реалистичные цели, отслеживайте прогресс, празднуйте маленькие победы и окружите себя поддержкой близких или единомышленников.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Как правильно готовить, чтобы сохранить питательные вещества?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Предпочитайте варку на пару, запекание или быстрое обжаривание. Избегайте длительной термической обработки и используйте минимум масла.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- О бренде -->
+        <section class="about-section">
+            <div class="about-header">
+                <h2 class="about-title">что кого гаго</h2>
+                <div class="arrow-icon">↗</div>
+            </div>
+            <div class="about-content">
+                <div class="about-year">2025</div>
+                <div class="about-columns">
+                    <div class="about-text">
+                        <p class="about-main">A2W1® — это бренд уличной одежды, родившийся в Санкт-Петербурге.</p>
+                    </div>
+                    <div class="about-text">
+                        <p>A2W1® — это бренд уличной одежды, родившийся в Санкт-Петербурге.</p>
+                    </div>
+                </div>
+                <div class="about-links">
+                    <a href="#" class="link-telegram">TELEGRAM</a>
+                    <a href="#" class="link-instagram">INSTAGRAM</a>
+                    <div class="about-text-small">
+                        <p>A2W1® — это бренд уличной одежды, родившийся в Санкт-Петербурге.</p>
+                    </div>
+                    <div class="about-text-small">
+                        <p>A2W1® — это бренд уличной одежды.</p>
+                    </div>
+                    <div class="design-credit">DESIGN — A21</div>
+                </div>
+            </div>
+        </section>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('nav');
+            const body = document.body;
+            nav.classList.toggle('active');
+            
+            if (nav.classList.contains('active')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = '';
+            }
+        }
+        
+        function toggleFaq(element) {
+            const faqItem = element.closest('.faq-item');
+            const isActive = faqItem.classList.contains('active');
+            
+            // Закрыть все открытые FAQ
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Открыть текущий, если он был закрыт
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Закрыть меню при клике на ссылку коллекции
+            document.querySelectorAll('.dropdown a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        toggleMenu();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

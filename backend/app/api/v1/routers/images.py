@@ -1,8 +1,6 @@
 from venv import logger
 from fastapi import Depends, HTTPException, UploadFile, APIRouter
-from sqlalchemy import delete
 from app.api.v1.dependency.uow import UOWDep
-import aiofiles
 
 from app.api.v1.dependency.user import AdminDep, get_admin
 from app.services.exceptions.photo import PhotoServiceException

@@ -1,7 +1,7 @@
 from sqladmin import ModelView
 from app.db.models.models import (
     CollectionCategory, Photo, Size, Material, Color, BaseCategory, SubCategory,
-    Product, ProductVariant, Collection, CollectionProduct, ProductPhoto, User
+    Product, ProductVariant, Collection, ProductPhoto, User
 )
 
 
@@ -70,13 +70,13 @@ class CollectionAdmin(ModelView, model=Collection):
     column_sortable_list = [Collection.id, Collection.title]
 
 
-class CollectionProductAdmin(ModelView, model=CollectionProduct):
-    column_list = [
-        CollectionProduct.id,
-        CollectionProduct.collection_id,
-        CollectionProduct.product_id
-    ]
-    column_sortable_list = [CollectionProduct.id]
+# class CollectionProductAdmin(ModelView, model=CollectionProduct):
+#     column_list = [
+#         CollectionProduct.id,
+#         CollectionProduct.collection_id,
+#         CollectionProduct.product_id
+#     ]
+#     column_sortable_list = [CollectionProduct.id]
 
 
 class ProductPhotoAdmin(ModelView, model=ProductPhoto):
