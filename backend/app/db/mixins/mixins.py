@@ -12,7 +12,6 @@ from app.schemas.dto import (
     ProductDTO,
     ProductVariantDTO,
     CollectionDTO,
-    # CollectionProductDTO,
     ProductPhotoDTO,
     UserDTO,
 )
@@ -64,11 +63,6 @@ class CollectionCategoryMixin(Mixin[CollectionCategoryDTO]):
 class CollectionMixin(Mixin[CollectionDTO]):
     dto = CollectionDTO
 
-
-# class CollectionProductMixin(Mixin[CollectionProductDTO]):
-#     dto = CollectionProductDTO
-
-
 class ProductPhotoMixin(Mixin[ProductPhotoDTO]):
     dto = ProductPhotoDTO
     
@@ -77,6 +71,7 @@ class PhotoMixin(Mixin[PhotoDTO]):
     
 class UserMixin(Mixin[UserDTO]):
     dto = UserDTO
+
 
 
     

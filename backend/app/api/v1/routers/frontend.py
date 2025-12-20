@@ -1,13 +1,16 @@
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from app.repositories.implementations.sqlalchemy.base_uow import BaseUOW
 from app.services.implementations.collection_service import CollectionService
-from app.services.implementations.product_service import ProductService
 
 from app.api.v1.dependency.uow import UOWDep
-from app.services.implementations.frontend_service import FrontendBaseService
 from app.services.exceptions.collection import CollectionServiceException
+from app.application.services.base_page import BasePageService
+from app.api.v1.dependency.application import BasePageServiceDep
+from app.application.services.collections_page import CollectionsPageService
+from app.application.utils.separation_text_helper import SeparationTextBySymbol
+from app.services.implementations.product_service import ProductService
+from app.services.exceptions.product import ProductServiceException
 
 router = APIRouter(tags=["Frontend"])
 
@@ -16,23 +19,104 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/", response_class=HTMLResponse, name="home")
-async def home(request: Request, uow: UOWDep):
+async def home(request: Request, base_page_service: BasePageServiceDep):
     """Главная страница"""
     try:
-        fr_sv = FrontendBaseService(uow, CollectionService(uow, ProductService(uow)))
-        data = await fr_sv.base_data()
-        print(data)
-        # Подготовка контекста для шаблона
-        context = {
-            "request": request,
-            "large_collections": data.get('large_collection'),  # (category, [collections])
-            "capsule_collections": data.get('capsule'),  # (category, [collections])
-        }
-        
+        base_page_data = await base_page_service.get_home_page_data()
         return templates.TemplateResponse(
             request=request, 
-            name="base.html", 
-            context=context
+            name="home.html", 
+            context={"request": request, "base_page_data": base_page_data}
         )
     except (CollectionServiceException) as e:
         raise HTTPException(e.status_code, e.args[0])
+
+@router.get(
+    "/collections/collection_category_id/{collection_category_id}",
+    response_class=HTMLResponse,
+    name="collections_by_cat_id"
+)
+async def collections_by_cat_id(
+    request: Request,
+    uow: UOWDep,
+    base_page_service: BasePageServiceDep,
+    collection_category_id: int
+):
+    """Страница коллекций по id категории"""
+    try:
+        collection_page_service = CollectionsPageService(
+            collection_service=CollectionService(uow=uow)
+        )
+        return templates.TemplateResponse(
+            request=request, 
+            name="collections_by_cat_id.html", 
+            context={
+                "request": request,
+                "base_page_data": await base_page_service.get_home_page_data(),
+                "collection_page_data": await collection_page_service.get_collections_by_cat_id_page_data(
+                    collection_category_id=collection_category_id
+                )
+            }
+        )
+    except (CollectionServiceException) as e:
+        raise HTTPException(e.status_code, e.args[0])
+    
+@router.get(
+    "/collection/{collection_id}",
+    response_class=HTMLResponse,
+    name="collection_by_id"
+)
+async def collections_by_cat_id(
+    request: Request,
+    uow: UOWDep,
+    base_page_service: BasePageServiceDep,
+    collection_id: int
+):
+    """Товары коллекции"""
+    # try:
+    #     collection_page_service = CollectionsPageService(
+    #         collection_service=CollectionService(uow=uow)
+    #     )
+    #     return templates.TemplateResponse(
+    #         request=request, 
+    #         name="collections_by_cat_id.html", 
+    #         context={
+    #             "request": request,
+    #             "base_page_data": await base_page_service.get_home_page_data(),
+    #             "collection_page_data": await collection_page_service.get_collections_page_data(
+    #                 collection_category_id=collection_category_id
+    #             )
+    #         }
+    #     )
+    # except (CollectionServiceException) as e:
+    #     raise HTTPException(e.status_code, e.args[0])
+    
+
+@router.get(
+    "/product/{product_id}",
+    response_class=HTMLResponse,
+    name="product_by_id"
+)
+async def product_by_id(
+    request: Request,
+    uow: UOWDep,
+    base_page_service: BasePageServiceDep,
+    product_id: int
+):
+    """Получение страницы с товаром коллекции"""
+    product_service = ProductService(uow=uow, collection_service=CollectionService(uow))
+    try:
+        product = await product_service.product_with_details(id=product_id)
+        print(product)
+        return templates.TemplateResponse(
+                request=request, 
+                name="product.html", 
+                context={
+                    "request": request,
+                    "base_page_data": await base_page_service.get_home_page_data(),
+                    "product": product,
+                }
+            )
+    except (ProductServiceException) as e:
+        raise HTTPException(e.status_code, e.args[0])
+    

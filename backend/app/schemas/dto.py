@@ -37,7 +37,6 @@ class PhotoDTO(BaseModel):
     file_path: str
     
     
-    
 class ProductVariantDTO(BaseModel):
     id: int
     product_id: int
@@ -53,20 +52,16 @@ class CollectionCategoryDTO(BaseModel):
     description: str
     sort_order: int
 
+
 class CollectionDTO(BaseModel):
     id: int
     title: str
     description: Optional[str]
-    photo: PhotoDTO
+
+
+class CollectionWithDetailsDTO(CollectionDTO):
     collection_category: CollectionCategoryDTO
-
-
-# class CollectionProductDTO(BaseModel):
-#     id: int
-#     collection_id: int
-#     product_id: int
-    
-#     product: ProductDTO
+    photo: PhotoDTO
 
 
 class ProductPhotoDTO(BaseModel):
@@ -74,8 +69,10 @@ class ProductPhotoDTO(BaseModel):
     product_id: int
     is_primary: bool
     sort_order: int
-    
-    photo: PhotoDTO 
+
+
+class ProductPhotoWithPhotoDTO(ProductPhotoDTO):
+    photo: PhotoDTO
     
     
 class UserDTO(BaseModel):
@@ -95,5 +92,7 @@ class ProductDTO(BaseModel):
     material_id: Optional[int]
     collection_id: Optional[int]
     simple_quantity: int
-    
-    photos: list[ProductPhotoDTO]
+
+
+class ProductWithPhotoDTO(ProductDTO):
+    photos: list[ProductPhotoWithPhotoDTO]

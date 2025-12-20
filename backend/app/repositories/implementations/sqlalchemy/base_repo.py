@@ -29,7 +29,7 @@ class BaseSQLAlchemyRepository(IBaseRepository[DTO, Model]):
             logger.warning(
                 "SQLAlchemyError: failed get by id",
                 exc_info=True,
-                extra={"id": id}
+                extra={"id": id, "instance": self}
                 )
             raise RepositoryExc("Failed get by id") from e
     
@@ -42,6 +42,7 @@ class BaseSQLAlchemyRepository(IBaseRepository[DTO, Model]):
             logger.warning(
                 "SQLAlchemyError: failed get all",
                 exc_info=True,
+                extra={"instance": self}
                 )
             raise RepositoryExc("Failed get all") from e
     
@@ -54,7 +55,7 @@ class BaseSQLAlchemyRepository(IBaseRepository[DTO, Model]):
             logger.warning(
                 "SQLAlchemyError: failed add",
                 exc_info=True,
-                extra={"obj": obj}
+                extra={"obj": obj, "instance": self}
                 )
             raise RepositoryExc("Failed get add") from e
         
@@ -67,7 +68,7 @@ class BaseSQLAlchemyRepository(IBaseRepository[DTO, Model]):
             logger.warning(
                 "SQLAlchemyError: failed get by filters",
                 exc_info=True,
-                extra={"filters": filters}
+                extra={"filters": filters, "instance": self}
                 )
             raise RepositoryExc("Failed get by filters") from e
         
@@ -80,6 +81,6 @@ class BaseSQLAlchemyRepository(IBaseRepository[DTO, Model]):
             logger.warning(
                 "SQLAlchemyError: failed delete by filters",
                 exc_info=True,
-                extra={"filters": filters}
+                extra={"filters": filters, "instance": self}
                 )
             raise RepositoryExc("Failed delete by filters") from e

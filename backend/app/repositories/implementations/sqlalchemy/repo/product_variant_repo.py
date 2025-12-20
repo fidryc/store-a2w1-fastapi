@@ -23,9 +23,12 @@ class ProductVariantRepository(IProductVariantRepository, BaseSQLAlchemyReposito
     
     async def color_variation_of_product(self, product_id: int) -> list[ColorDTO]:
         query = text("""
-                     SELECT DISTINCT colors.id, colors.title
+                     SELECT DISTINCT colors.id, colors.title, colors.hex
                     FROM product_variants
-                    LEFT JOIN colors ON product_variants.color_id = colors.id
-                     """)
-        res = (await self.session.execute(query))
-        return res.all()
+                    LEFT JOIN sizes ON product_variants.size_id = sizes.id
+                    WHERE product_variants.product_id = :product_id
+                    """
+                     )
+        res = (await self.session.execute(query, params={"product_id": product_id}))
+        color_dtos = [ColorDTO.model_construct(**obj) for obj in res.mappings().all()]
+        return color_dtos

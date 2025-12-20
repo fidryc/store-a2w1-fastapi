@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if product.product %}
+<div class="product-section">
+    <!-- Галерея фотографий -->
+    <div class="product-gallery">
+        <div class="gallery-main" id="productGallery">
+            {% if product.product.photos %}
+                {% for photo in product.product.photos %}
+                <img src="/static/uploads/{{ photo.photo.file_path }}.jpg" 
+                     alt="{{ product.product.title }}"
+                     class="{% if loop.first %}active{% endif %}"
+                     data-index="{{ loop.index0 }}">
+                {% endfor %}
+                
+                {% if product.product.photos|length > 1 %}
+                <!-- Стрелки навигации -->
+                <div class="gallery-arrow prev" onclick="changeProductPhoto(-1)">‹</div>
+                <div class="gallery-arrow next" onclick="changeProductPhoto(1)">›</div>
+                
+                <!-- Точки навигации -->
+                <div class="gallery-nav">
+                    {% for photo in product.product.photos %}
+                    <div class="gallery-dot {% if loop.first %}active{% endif %}" 
+                         onclick="goToProductPhoto({{ loop.index0 }})"></div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% else %}
+                <img src="/static/images/placeholder.jpg" alt="Нет фото">
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Информация о товаре -->
+    <div class="product-info">
+        {% if category %}
+        <div class="collection-title">{{ category.title }}</div>
+        {% endif %}
+        
+        <h1 class="product-title">{{ product.product.title }}</h1>
+        
+        {% if product.product.description %}
+        <div class="product-description">{{ product.product.description }}</div>
+        {% endif %}
+
+        <!-- Размеры -->
+        {% if product.sizes %}
+        <div class="sizes-label">Размер:</div>
+        <div class="sizes-grid">
+            {% for size in product.sizes %}
+            <button class="size-button" onclick="selectProductSize(this)">
+                {{ size.title }}
+            </button>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Остаток -->
+        {% if product.product.simple_quantity > 0 %}
+        <div class="stock-info">
+            Осталось {{ product.product.simple_quantity }} шт.
+        </div>
+        {% endif %}
+
+        <!-- Кнопка заказа -->
+        <button class="order-button" onclick="orderProductItem()" 
+                {% if product.product.simple_quantity == 0 %}disabled{% endif %}>
+            {% if product.product.simple_quantity > 0 %}Заказать{% else %}Нет в наличии{% endif %}
+        </button>
+    </div>
+</div>
+{% else %}
+<div class="not-found">
+    <h1>Товар не найден</h1>
+    <p><a href="/">Вернуться на главную</a></p>
+</div>
+{% endif %}
+
+<script>
+    // Галерея продукта - используем уникальные имена переменных
+    let currentProductPhotoIndex = 0;
+    const productPhotos = document.querySelectorAll('.gallery-main img');
+    const productDots = document.querySelectorAll('.gallery-dot');
+    const totalProductPhotos = productPhotos.length;
+
+    function changeProductPhoto(direction) {
+        if (totalProductPhotos <= 1) return;
+        
+        productPhotos[currentProductPhotoIndex].classList.remove('active');
+        productDots[currentProductPhotoIndex].classList.remove('active');
+        
+        currentProductPhotoIndex = (currentProductPhotoIndex + direction + totalProductPhotos) % totalProductPhotos;
+        
+        productPhotos[currentProductPhotoIndex].classList.add('active');
+        productDots[currentProductPhotoIndex].classList.add('active');
+    }
+
+    function goToProductPhoto(index) {
+        if (totalProductPhotos <= 1) return;
+        
+        productPhotos[currentProductPhotoIndex].classList.remove('active');
+        productDots[currentProductPhotoIndex].classList.remove('active');
+        
+        currentProductPhotoIndex = index;
+        
+        productPhotos[currentProductPhotoIndex].classList.add('active');
+        productDots[currentProductPhotoIndex].classList.add('active');
+    }
+
+    // Навигация клавишами - только для страницы товара
+    document.addEventListener('keydown', (e) => {
+        if (document.querySelector('.product-section')) {
+            if (e.key === 'ArrowLeft') changeProductPhoto(-1);
+            if (e.key === 'ArrowRight') changeProductPhoto(1);
+        }
+    });
+
+    // Свайп на мобильных
+    let productTouchStartX = 0;
+    let productTouchEndX = 0;
+
+    const productGallery = document.getElementById('productGallery');
+    
+    if (productGallery) {
+        productGallery.addEventListener('touchstart', (e) => {
+            productTouchStartX = e.changedTouches[0].screenX;
+        });
+
+        productGallery.addEventListener('touchend', (e) => {
+            productTouchEndX = e.changedTouches[0].screenX;
+            handleProductSwipe();
+        });
+    }
+
+    function handleProductSwipe() {
+        if (productTouchEndX < productTouchStartX - 50) changeProductPhoto(1);
+        if (productTouchEndX > productTouchStartX + 50) changeProductPhoto(-1);
+    }
+
+    // Выбор размера
+    let selectedProductSize = null;
+
+    function selectProductSize(button) {
+        document.querySelectorAll('.size-button').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        button.classList.add('selected');
+        selectedProductSize = button.textContent.trim();
+    }
+
+    // Заказ товара
+    function orderProductItem() {
+        {% if product.product %}
+        const productTitle = '{{ product.product.title }}';
+        const sizeRequired = {{ 'true' if product.sizes else 'false' }};
+        
+        if (sizeRequired && !selectedProductSize) {
+            alert('Пожалуйста, выберите размер');
+            return;
+        }
+
+        const message = sizeRequired 
+            ? `Здравствуйте! Хочу заказать ${productTitle}, размер ${selectedProductSize}`
+            : `Здравствуйте! Хочу заказать ${productTitle}`;
+        
+        // Замените на ваш Telegram username или ссылку
+        const telegramUrl = `https://t.me/yourusername?text=${encodeURIComponent(message)}`;
+        window.open(telegramUrl, '_blank');
+        {% endif %}
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="block-container">
+    <section class="about-section">
+        <div class="about-content">
+            <div class="about-text">
+                <p class="about-description">
+                    A2W1® — это бренд уличной одежды, родившийся в Санкт-Петербурге.<br>
+                    Наш стиль соединяет стрит-культуру и важные ценности: родина, семья, свобода и сила духа. Вдохновляясь атмосферой города, мы создаём одежду, которая отражает динамику жизни и стремление!
+                </p>
+                <a href="#" class="about-link">Смотреть все</a>
+            </div>
+            <div class="about-image">
+                <img src="/static/images/about-image.jpg" alt="A2W1">
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="block-container">
+    <div class="carousel-section">
+        <div class="block-header">
+            <div class="carousel-header">
+                <h2>A2W1 КАК СМЫСЛ</h2>
+
+                <span class="line"></span>
+
+                <a href="#" class="instagram-link">instagram</a>
+            </div>
+        </div>
+        
+        <div class="carousel-track-container">
+            <div class="carousel-block">
+                <div class="carousel-track-container">
+                    <div class="carousel-track" id="carouselTrack">
+                        <div class="carousel-image"><img src="/static/images/image-1.jpg"></div>
+                        <div class="carousel-image lower"><img src="/static/images/image-2.jpg"></div>
+                        <div class="carousel-image"><img src="/static/images/image-3.jpg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="block-container">
+    <div class="capsule-header">
+        <div class="block-header">
+            <h2>КАПСУЛЬНЫЕ КОЛЛЕКЦИИ</h2>
+        </div>
+        <div class="capsule-text">
+            <p>
+                Капсульная коллекция имеет ограниченный тираж  
+                15 шт. на каждый экземпляр.  
+                Вы получаете индивидуальную вещь  
+                с определённым номером на футболке от 01 до 15.
+            </p>
+
+            <p>
+                Это сможет выделить вас и  
+                сохранить индивидуальность.
+            </p>
+        </div>
+
+        <div class="capsule-text-wide">
+            <p>
+                Дополнительно к каждой капсуле доступны постеры и  
+                стикеры в фирменном стиле коллекции. Они не имеют  
+                ограничения по тиражу.
+            </p>
+        </div>
+    </div>
+
+    <div class="collage">
+
+        <!-- Левая колонка -->
+        <div class="left">
+            <label class="photo">
+            <input type="checkbox">
+            <img src="/static/images/left-top.jpg" alt="Left top photo">
+            <div class="preview">
+                <img src="/static/images/left-top.jpg" alt="Left top photo">
+            </div>
+            </label>
+
+            <label class="photo">
+            <input type="checkbox">
+            <img src="/static/images/left-bottom.jpg" alt="Left bottom photo">
+            <div class="preview">
+                <img src="/static/images/left-bottom.jpg" alt="Left bottom photo">
+            </div>
+            </label>
+        </div>
+
+        <!-- Правая колонка -->
+        <div class="right">
+            <label class="photo">
+            <input type="checkbox">
+            <img src="/static/images/right-top.jpg" alt="Right top photo">
+            <div class="preview">
+                <img src="/static/images/right-top.jpg" alt="Right top photo">
+            </div>
+            </label>
+
+            <div class="right-bottom">
+            <label class="photo">
+                <input type="checkbox">
+                <img src="/static/images/right-bottom-long.jpg" alt="Right bottom long photo">
+                <div class="preview">
+                <img src="/static/images/right-bottom-long.jpg" alt="Right bottom long photo">
+                </div>
+            </label>
+
+            <div class="rb-small">
+                <label class="photo">
+                <input type="checkbox">
+                <img src="/static/images/right-bottom-small-top.jpg" alt="Right bottom small top photo">
+                <div class="preview">
+                    <img src="/static/images/right-bottom-small-top.jpg" alt="Right bottom small top photo">
+                </div>
+                </label>
+
+                <label class="photo">
+                <input type="checkbox">
+                <img src="/static/images/right-bottom-small-bottom.jpg" alt="Right bottom small bottom photo">
+                <div class="preview">
+                    <img src="/static/images/right-bottom-small-bottom.jpg" alt="Right bottom small bottom photo">
+                </div>
+                </label>
+            </div>
+            </div>
+        </div>
+
+        </div>
+    <a href="#" class="about-link">Смотреть коллекции</a>
+</div>
+
+<div class="block-container">
+    <div class="capsule-header">
+        <div class="block-header">
+            <h2>стикеры постеры</h2>
+        <div class="block-header">
+        <div class="capsule-text">
+            <p>
+                Яркий и дерзкий акцент 
+                в фирменной атмосфере 
+                A2W1 в стикерпаках легко 
+                украсит рюкзак, ноутбук 
+                или рабочее пространство.
+            </p>
+        </div>
+        <div class="capsule-text-wide">
+            <p>
+                Постеры станут выразительным элементом
+                    интерьера — для комнаты, студии или рабочего уголка.
+            </p>
+        </div>
+    </div>
+    <div class="collage-new">
+        <div class="col-left">
+            <label class="photo">
+            <input type="checkbox">
+            <img src="/static/images/sticker-posters-left.jpg" alt="Left photo">
+            <div class="preview">
+                <img src="/static/images/sticker-posters-left.jpg" alt="Left photo">
+            </div>
+            </label>
+        </div>
+
+        <div class="col-middle">
+            <label class="photo">
+            <input type="checkbox">
+            <img src="/static/images/sticker-posters-middle-top.jpg" alt="Middle top photo">
+            <div class="preview">
+                <img src="/static/images/sticker-posters-middle-top.jpg" alt="Middle top photo">
+            </div>
+            </label>
+
+            <label class="photo">
+            <input type="checkbox">
+            <img src="/static/images/sticker-posters-middle-bottom.jpg" alt="Middle bottom photo">
+            <div class="preview">
+                <img src="/static/images/sticker-posters-middle-bottom.jpg" alt="Middle bottom photo">
+            </div>
+            </label>
+        </div>
+
+        <div class="col-right">
+            <label class="photo">
+            <input type="checkbox">
+            <img src="/static/images/sticker-posters-right-top.jpg" alt="Right top photo">
+            <div class="preview">
+                <img src="/static/images/sticker-posters-right-top.jpg" alt="Right top photo">
+            </div>
+            </label>
+
+            <label class="photo">
+            <input type="checkbox">
+            <img src="/static/images/sticker-posters-right-bottom.jpg" alt="Right bottom photo">
+            <div class="preview">
+                <img src="/static/images/sticker-posters-right-bottom.jpg" alt="Right bottom photo">
+            </div>
+            </label>
+        </div>
+    </div>
+    <div>
+        <a href="#" class="about-link">Смотреть коллекции</a>
+    </div>
+</div>
+
+<div class="block-container">
+    <div class="block-header">
+        <h2>СТИКЕРПАКИ ПОСТЕРЫ</h2>
+    </div>
+    <div class="four-columns">
+        <div class="col">
+            <p>Уличная культура A2W1® рождается на улицах Петербурга — среди граффити, мостов, дворов и ночного движения. Наш стиль формируют реальные истории, независимость и смелость быть собой. Мы делаем одежду, в которой чувствуется импульс города, его ритм, его живой характер.</p>
+        </div>
+        <div class="col">
+            <p>Ценности и сила духа В основе бренда — родина, семья, честность, свобода и внутренняя устойчивость. Это не просто слова, а ориентиры, которые мы переносим в каждую деталь. Мы создаём вещи, которые помогают держать баланс, помнить свои корни и идти вперёд с поднятой головой.</p>
+        </div>
+        <div class="col">
+            <p>Текст третьего столбцаАтмосфера города и вдохновение музыкой Нас формирует Петербург — его история, контрастность, архитектура, свет и тени. Но не меньше — музыка, которая звучит здесь. Вдохновение треками «52», уличным звучанием, честными вибрациями и культурой города делает визуальный стиль брендa глубже и эмоциональнее. Это эстетика, которую можно почувствовать.</p>
+        </div>
+        <div class="col">
+            <p>Одежда со смыслом A2W1® — это не просто вещи. Это настроение, посыл и акцент, который говорит за вас. Мы создаём капсулы, которые подчёркивают индивидуальность, отражают движение жизни и соединяют культуру, музыку и личные ценности в один цельный образ.</p>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="block-container">
+    <div class="block-header" style="margin-top: 158px;">
+        <h2 class="faq-title">частые вопросы</h2>
+    </div>
+        
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Как проводится заказ и оплата?</span>
+            <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-answer">
+            <p>После выбора товара вы автоматически перенаправляетесь к менеджеру в Telegram. Он подтверждает заказ, принимает оплату, формирует ваш комплект и остаётся на связи с вами до момента получения товара.</p>
+        </div>
+    </div>
+
+    <div class="faq-item last-faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Есть ли ограниченный тираж?</span>
+            <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-answer">
+            <p>Да есть. На коллекцию есть ограничения по количеству</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

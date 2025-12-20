@@ -2,12 +2,12 @@ from datetime import datetime, timedelta, timezone
 from typing import Literal
 import uuid
 
-from fastapi import Request, Response
+from fastapi import Response
 from app.core.config import settings
 from jwt import decode, encode
 from jwt.exceptions import PyJWTError
 from app.core.logger import logger
-from app.utils.exceptions import AbsenceAccessJWTExc, AbsenceRefreshJWTExc, TimeExpireAccessJWTExc, TimeExpireJWTExc, TimeExpireRefreshJWTExc
+from app.utils.exceptions import TimeExpireAccessJWTExc
 
 
 def create_token(email: str, type: str) -> str:
@@ -40,7 +40,7 @@ def set_token(response: Response, token: str, type):
             settings.JWT_REFRESH_TOKEN_NAME,
             token,
             httponly=True,
-            max_age=int(timedelta(seconds=settings.EXP_DAYS_REFRESH_TOKEN).total_seconds()),
+            max_age=int(timedelta(days=settings.EXP_DAYS_REFRESH_TOKEN).total_seconds()),
         )
 
 

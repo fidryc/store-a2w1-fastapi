@@ -79,7 +79,6 @@ class UserService(IUserService):
         try:
             user = await self.uow.user_repo.get_by_filters(email=access_token_payload["user_email"])
         except RepositoryExc as e:
-            logger.critical("User repository error: Failed get user by email")
             raise UserServiceException("Failed get user by email", status_code=500) from e
         
         if not user:

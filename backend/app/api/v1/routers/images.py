@@ -20,7 +20,9 @@ async def upload_file(path: str, uow: UOWDep, file: UploadFile):
     
     try:
         photo_service = PhotoService(uow)
-        return (await photo_service.add(await file.read(), path))
+        id = (await photo_service.add(await file.read(), path))
+        await uow.commit()
+        return id
     except PhotoServiceException as e:
         raise HTTPException(status_code=e.status_code, detail=e.args[0])
     except Exception as e:

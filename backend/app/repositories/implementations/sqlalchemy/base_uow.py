@@ -81,15 +81,18 @@ class BaseUOW(IBaseUOW):
         if not self.__size_repo:
             self.__size_repo = SizeRepository(self.__session)
         return self.__size_repo
+    
+    @property
+    def base_category_repo(self) -> BaseCategoryRepository:
+        if not self.__base_category_repo:
+            self.__base_category_repo = BaseCategoryRepository(self.__session)
+        return self.__base_category_repo
 
     @property
     def material_repo(self) -> MaterialRepository: ...
 
     @property
     def color_repo(self) -> ColorRepository: ...
-
-    @property
-    def base_category_repo(self) -> BaseCategoryRepository: ...
 
     @property
     def sub_category_repo(self) -> SubCategoryRepository: ...

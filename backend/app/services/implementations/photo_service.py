@@ -9,8 +9,9 @@ import os
 from app.core.logger import logger
 
 class PhotoService:
-    def __init__(self, uow: IBaseUOW):
+    def __init__(self, uow: IBaseUOW, file_optimizer = None):
         self.uow = uow
+        # self.file_optimizer = file_optimizer
         
     @staticmethod
     def __validate_file_name(file_path: str):
@@ -40,7 +41,18 @@ class PhotoService:
                 "Ошибка добавления фото",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             ) from e
-        async with aiofiles.open(f"app/static/images/{file_path}.jpg", "wb") as f:
+            
+        # try:
+        #     optimize_file = self.file_optimizer.optimize_file()
+        # except FileOptimizerException as e:
+        #     logger.warning(
+        #         "Failed optimize file",
+        #         exc_info=True,
+        #         extra={"file": file}
+        #     )
+        # if optimize_file:
+        #     file = optimize_file
+        async with aiofiles.open(f"app/static/uploads/{file_path}.jpg", "wb") as f:
             await f.write(file)
 
         return id

@@ -138,18 +138,6 @@ class Collection(CollectionMixin, Base):
     
     def __str__(self):
         return f"Collection: {self.title}"
-    
-
-
-# class CollectionProduct(CollectionProductMixin, Base):
-#     __tablename__ = "collection_products"
-
-#     id: Mapped[int] = mapped_column(primary_key=True)
-#     collection_id: Mapped[int] = mapped_column(ForeignKey("collections.id"), index=True)
-#     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
-    
-#     product = relationship("Product", lazy="select")
-#     collection = relationship("Collection")
 
 class ProductPhoto(ProductPhotoMixin, Base):
     __tablename__ = "product_photos"

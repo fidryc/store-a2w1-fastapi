@@ -25,7 +25,7 @@ async def test(response: Response, email: str, pwd: str, uow: UOWDep):
         raise HTTPException(status_code=e.status_code, detail=e.args[0])
     except Exception as e:
         logger.critical("Unknow error in login", exc_info=True, extra={"email": email, "pwd": pwd})
-        raise HTTPException(status_code=e.status_code, detail=e.args[0])
+        raise HTTPException(status_code=500, detail=e.args[0])
     
 @router.get("/test")
 async def test(user: CurrentUserDep):

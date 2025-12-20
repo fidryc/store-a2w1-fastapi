@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="collections-container">
+    {% set collections = collection_page_data.collections %}
+    {% set placeholder_images = [
+        'ef0f07e6b8953258c5f72b455032f7d3.png',
+        '22c2f327ac81c71cf155eead62c1d2a2.png',
+        'ef0f07e6b8953258c5f72b455032f7d3(1).png'
+    ] %}
+    {% set display_collections = collections %}
+    {% if collections|length < 3 %}
+        {% set display_collections = collections + [None] * (3 - collections|length) %}
+    {% endif %}
+    {% for collection in display_collections %}
+    {% set mod = loop.index % 3 %}
+    {% set is_empty = collection is none %}
+    {% set top_margin = "100px" if mod == 0 else "0" %}
+    <section class="collection-item mod-{{ mod if mod != 0 else 0 }}" style="margin-top: {{ top_margin }};">
+        <!-- ===== MEDIA (IMAGE + RED TEXTS) ===== -->
+        <div class="collection-media">
+            {% if mod == 1 %}
+                <div class="red-text red-before behind">
+                    <img src="/static/images/Group 5569.png" alt="">
+                </div>
+                <div class="red-text red-top front">
+                    <img src="/static/images/Group 5570.png" alt="">
+                </div>
+            {% endif %}
+            {% if mod == 2 %}
+                <div class="red-text red-after behind">
+                    <img src="/static/images/Group 5571.png" alt="">
+                </div>
+            {% endif %}
+            {% if mod == 0 %}
+                <div class="red-text red-before behind">
+                    <img src="/static/images/Group 5573.png" alt="">
+                </div>
+                <div class="red-text red-bottom front">
+                    <img src="/static/images/Group 5572.png" alt="">
+                </div>
+            {% endif %}
+            <div class="collection-main-image">
+                {% if collection %}
+                    <a href="/collection/{{ collection.id }}">
+                        <img src="/static/uploads/{{ collection.photo.file_path }}.jpg"
+                             alt="{{ collection.title }}">
+                    </a>
+                {% else %}
+                    <img src="/static/images/{{ placeholder_images[loop.index - 1] }}" alt="">
+                {% endif %}
+            </div>
+        </div>
+        <!-- ===== DESCRIPTION ===== -->
+        <div class="collection-description-block">
+            <h2 class="collection-description-heading">
+                {{ collection.title if collection else "Скоро" }}
+            </h2>
+            {% if collection and collection.description %}
+                {% set parts = collection.description.split(";") %}
+            {% else %}
+                {% set parts = [
+                    "Новая коллекция уже готовится.",
+                    "Совсем скоро здесь появятся уникальные товары.",
+                    "Следите за обновлениями."
+                ] %}
+            {% endif %}
+            <div class="collection-description-columns">
+                {% for part in parts[:3] %}
+                    <div class="description-col {% if loop.index == 1 %}col-main{% endif %}">
+                        <p class="description-text">{{ part }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endfor %}
+</div>
+{% endblock %}
