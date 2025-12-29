@@ -2,7 +2,7 @@ from sqlalchemy import String, Integer, ForeignKey, Numeric, Boolean, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import relationship
 from typing import Optional
-from app.db.mixins.mixins import BaseCategoryMixin, CollectionCategoryMixin, CollectionMixin, Mixin, PhotoMixin, ProductMixin, ProductPhotoMixin, ProductVariantMixin, SizeMixin, MaterialMixin, ColorMixin, SubCategoryMixin, UserMixin
+from app.db.mixins.mixins import BaseCategoryMixin, CollectionCategoryMixin, CollectionMixin, CollectionProductLimitMixin, Mixin, PhotoMixin, ProductMixin, ProductPhotoMixin, ProductVariantMixin, SizeMixin, MaterialMixin, ColorMixin, SubCategoryMixin, UserMixin
 
 
 class Base(Mixin, DeclarativeBase):
@@ -82,14 +82,14 @@ class Product(ProductMixin, Base):
     sub_category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("sub_categories.id"), index=True)
     material_id: Mapped[Optional[int]] = mapped_column(ForeignKey("materials.id"), index=True)
     collection_id: Mapped[Optional[int]] = mapped_column(ForeignKey("collections.id"), index=True, nullable=True)
-    simple_quantity: Mapped[int] = mapped_column(Integer, default=0)
+    simple_quantity: Mapped[int] = mapped_column(Integer)
     
     material = relationship("Material")
     base_category = relationship("BaseCategory")
     sub_category = relationship("SubCategory")
     collection = relationship("Collection")
-
     photos = relationship("ProductPhoto")
+    
     def __str__(self):
         return f"Product: {self.title}"
 
@@ -117,6 +117,7 @@ class CollectionCategory(CollectionCategoryMixin, Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(32))
+    slug: Mapped[str] = mapped_column(String(32), nullable=True)
     description: Mapped[Optional[str]] = mapped_column(Text)
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
     
@@ -139,6 +140,20 @@ class Collection(CollectionMixin, Base):
     def __str__(self):
         return f"Collection: {self.title}"
 
+
+class CollectionProductLimit(CollectionProductLimitMixin, Base):
+    """Модель для определения количества на товары в определенной коллекци и категории"""
+    __tablename__ = "collection_product_limits"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    collection_id: Mapped[int] = mapped_column(ForeignKey("collections.id"), index=True)
+    base_category_id: Mapped[int] = mapped_column(ForeignKey("base_categories.id"), index=True)
+    quantity: Mapped[int] = mapped_column(Integer)
+    
+    collection = relationship("Collection")
+    base_category = relationship("BaseCategory")
+
+    
 class ProductPhoto(ProductPhotoMixin, Base):
     __tablename__ = "product_photos"
 
@@ -149,7 +164,8 @@ class ProductPhoto(ProductPhotoMixin, Base):
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
     
     product = relationship("Product")
-    photo = relationship("Photo", lazy="select")
+    photo = relationship("Photo", lazy="selectin")
+    
     
 class Photo(PhotoMixin, Base):
     __tablename__ = "photos"

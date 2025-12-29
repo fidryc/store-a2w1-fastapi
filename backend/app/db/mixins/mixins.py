@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 from app.schemas.dto import (
     CollectionCategoryDTO,
+    CollectionProductLimitDTO,
     PhotoDTO,
     SizeDTO,
     MaterialDTO,
@@ -71,6 +72,9 @@ class PhotoMixin(Mixin[PhotoDTO]):
     
 class UserMixin(Mixin[UserDTO]):
     dto = UserDTO
+    
+class CollectionProductLimitMixin(Mixin[CollectionProductLimitDTO]):
+    dto = CollectionProductLimitDTO
 
 
 

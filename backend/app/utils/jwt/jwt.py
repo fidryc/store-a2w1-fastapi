@@ -7,7 +7,7 @@ from app.core.config import settings
 from jwt import decode, encode
 from jwt.exceptions import PyJWTError
 from app.core.logger import logger
-from app.utils.exceptions import TimeExpireAccessJWTExc
+from app.utils.jwt.exceptions import TimeExpireAccessJWTExc
 
 
 def create_token(email: str, type: str) -> str:

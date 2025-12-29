@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="products-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <div class="header-product">{{ product.collection.collection_category.title }} - {{ product.collection.title }}</div>
+        <div class="product-image">
+            {% if product.photos %}
+                {% set primary_photo = product.photos|selectattr('is_primary', 'equalto', true)|first %}
+                {% if primary_photo %}
+                <img src="/static/uploads//{{ primary_photo.photo.file_path }}.jpg" alt="{{ product.title }}">
+                {% else %}
+                <img src="/static/uploads//{{ product.photos[0].photo.file_path }}.jpg" alt="{{ product.title }}">
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="product-info">
+            <div class="product-status about-link"><a href="/product/{{ product.id }}">Заказать</a></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -49,6 +49,7 @@ class ProductVariantDTO(BaseModel):
 class CollectionCategoryDTO(BaseModel):
     id: int
     title: str
+    slug: str
     description: str
     sort_order: int
 
@@ -57,6 +58,8 @@ class CollectionDTO(BaseModel):
     id: int
     title: str
     description: Optional[str]
+    photo_id: int
+    collection_category_id: int
 
 
 class CollectionWithDetailsDTO(CollectionDTO):
@@ -96,3 +99,17 @@ class ProductDTO(BaseModel):
 
 class ProductWithPhotoDTO(ProductDTO):
     photos: list[ProductPhotoWithPhotoDTO]
+    
+    
+class ProductWithCategoriesDTO(ProductWithPhotoDTO):
+    base_category: BaseCategoryDTO
+    sub_category: SubCategoryDTO
+    
+class ProductWithCollectionDTO(ProductWithPhotoDTO):
+    collection: CollectionWithDetailsDTO
+
+class CollectionProductLimitDTO(BaseModel):
+    id: int
+    collection_id: int
+    base_category_id: int
+    quantity: int

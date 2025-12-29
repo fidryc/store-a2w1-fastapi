@@ -1,5 +1,5 @@
 from starlette.middleware.base import BaseHTTPMiddleware
-from fastapi import HTTPException, Request, Response
+from fastapi import Request
 from fastapi.responses import JSONResponse
 
 from app.repositories.implementations.sqlalchemy.base_uow import BaseUOW
@@ -7,7 +7,7 @@ from app.services.implementations.user_service import UserService
 from app.services.exceptions.user import UserServiceException
 from app.schemas.dataclasses import AuthTokens
 from app.core.config import settings
-from app.utils.jwt import set_token, create_delete_cookie_headers
+from app.utils.jwt.jwt import set_token
 
 
 class IsAdminMiddleware(BaseHTTPMiddleware):
@@ -35,7 +35,6 @@ class IsAdminMiddleware(BaseHTTPMiddleware):
                 return JSONResponse(
                     status_code=401,
                     content={"detail": "Требуется авторизация"},
-                    # headers=create_delete_cookie_headers()
                 )
 
         response = await call_next(request)

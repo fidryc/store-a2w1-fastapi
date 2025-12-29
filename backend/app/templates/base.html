@@ -24,7 +24,6 @@
                     </div>
                     
                     <nav class="nav" id="nav">
-                        <span class="close-menu" onclick="toggleMenu()">×</span>
                         <ul class="nav-menu">
                             <li class="nav-item">
                                 <a href="/collections/collection_category_id/{{ base_page_data.large_category.id }}">коллекция</a>
@@ -49,13 +48,13 @@
                             </li>
                             
                             <li class="nav-item">
-                                <a href="/products?category=posters">постеры/стикеры</a>
+                                <a href="/posters_stickers">постеры/стикеры</a>
                             </li>
                             <li class="nav-item">
                                 <a href="#about">а вы кто</a>
                             </li>
                         </ul>
-                        <a href="#" class="telegram">telegram</a>
+                        <a href="https://t.me/AndreyWay21" class="telegram">telegram</a>
                     </nav>
                 </header>
             </div>
@@ -80,34 +79,96 @@
                         <h2>A2W1 — это часть</h2>
                         <img src="/static/images/Vector 1.png" alt="↗" class="footer-arrow">
                     </div>
-                    <div class="class-footer">
-                        <!-- Строка 1 - белый текст -->
-                        <div class="footer-item footer-white">© 2026</div>
-                        <div class="footer-item footer-white">ВСЯКИЕ ДОКИ И БУМАЖКИ, А ТАК-ЖЕ ИНФА</div>
-                        <div class="footer-item footer-white">TELEGRAM</div>
-                        <div class="footer-item footer-white">НАШИ ДРУЗЬ — ТЕ КТО РАЗДЕЛЯТ НАШ ПОДХОД</div>
-                        <div class="footer-item footer-white">INSTAGRAM</div>
-                        <div class="footer-item footer-white">DEVELOPED A WEBSITE — WAY / FIDRYN</div>
-                        
-                        <!-- Строка 2 - красный текст -->
-                        <div class="footer-item">Все права защищены</div>
-                        <div class="footer-item footer-narrow">Контакты<br>Информация<br>Конфиденциальность<br>Подписка на новости</div>
-                        <div class="footer-item"></div>
-                        <div class="footer-item footer-friends">
-                        <div class="friends-title">EDELWHITE prod. | MUSIC&ART</div>
-                            <div class="friends-list">
-                                <span>Filt A21</span>
-                                <span>WAY A21</span>
-                                <span>Fidryn IT</span>
-                                <span>WAY DESIGN</span>
+                    
+                    <!-- ============================================ -->
+                    <!-- DESKTOP ВЕРСИЯ (показывается на ПК) -->
+                    <!-- ============================================ -->
+                    <div class="footer-desktop">
+                        <div class="class-footer">
+                            <!-- Строка 1 - белый текст -->
+                            <div class="footer-item footer-white">© 2026</div>
+                            <div class="footer-item footer-white">ВСЯКИЕ ДОКИ И БУМАЖКИ, А ТАК-ЖЕ ИНФА</div>
+                            <div class="footer-item footer-white">TELEGRAM</div>
+                            <div class="footer-item footer-white">НАШИ ДРУЗЬ — ТЕ КТО РАЗДЕЛЯТ НАШ ПОДХОД</div>
+                            <div class="footer-item footer-white">INSTAGRAM</div>
+                            <div class="footer-item footer-white">DEVELOPED A WEBSITE — WAY / FIDRYN</div>
+                            
+                            <!-- Строка 2 - красный текст -->
+                            <div class="footer-item">Все права защищены</div>
+                            <div class="footer-item footer-narrow">Контакты<br>Информация<br>Конфиденциальность<br>Подписка на новости</div>
+                            <div class="footer-item"></div>
+                            <div class="footer-item footer-friends">
+                                <div class="friends-title">EDELWHITE prod. | MUSIC&ART</div>
+                                <div class="friends-list">
+                                    <span>Filt A21</span>
+                                    <span>WAY A21</span>
+                                    <span>Fidryn IT</span>
+                                    <span>WAY DESIGN</span>
+                                </div>
+                            </div>
+                            <div class="footer-item"></div>
+                            <div class="footer-item footer-right-group">
+                                <span class="thanks-text">Спасибо что ты снами, мы рады видеть тебя в A2W1</span>
+                                <span class="yeei">YEEI</span>
                             </div>
                         </div>
-                        <div class="footer-item"></div>
-                        <div class="footer-item footer-right-group">
-                            <span class="thanks-text">Спасибо что ты снами, мы рады видеть тебя в A2W1</span>
-                            <span class="yeei">YEEI</span>
+                    </div>
+                    
+                    <!-- ============================================ -->
+                    <!-- MOBILE ВЕРСИЯ (показывается на телефонах) -->
+                    <!-- ============================================ -->
+                    <div class="footer-mobile">
+                        <div class="mobile-footer">
+                            
+                            <!-- БЛОК 1: © 2026 и ДОКИ -->
+                            <div class="mobile-block-1">
+                                <div class="mobile-col-narrow">
+                                    <div class="mobile-white">© 2026</div>
+                                    <div class="mobile-red">Все права защищены</div>
+                                </div>
+                                <div class="mobile-col-wide">
+                                    <div class="mobile-white">ВСЯКИЕ ДОКИ И БУМАЖКИ, А ТАК-ЖЕ ИНФА</div>
+                                    <div class="mobile-red">
+                                        Контакты<br>
+                                        Информация<br>
+                                        Конфиденциальность<br>
+                                        Подписка на новости
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- БЛОК 2: НАШИ ДРУЗЬЯ -->
+                            <div class="mobile-block-2">
+                                <div class="mobile-block-2-title">НАШИ ДРУЗЬ — ТЕ КТО РАЗДЕЛЯТ НАШ ПОДХОД</div>
+                                <div class="mobile-friends-columns">
+                                    <div class="mobile-friend-col">
+                                        <span>EDELWHITE prod. | MUSIC&ART</span>
+                                        <span>WAY DESIGN</span>
+                                    </div>
+                                    <div class="mobile-friend-col">
+                                        <p>Filt A21 WAY A21 Fidryn IT</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- БЛОК 3: DEVELOPED -->
+                            <div class="mobile-block-3">
+                                <div class="mobile-block-3-title">DEVELOPED A WEBSITE — WAY / FIDRYN</div>
+                                <div class="mobile-block-3-content">
+                                    <div class="mobile-thanks">Спасибо что ты снами, мы рады видеть тебя в A2W1</div>
+                                    <div class="mobile-yeei">YEEI</div>
+                                </div>
+                            </div>
+                            
+                            <!-- БЛОК 4: СОЦИАЛЬНЫЕ СЕТИ -->
+                            <div class="mobile-block-4">
+                                <a href="#" class="mobile-social-link">TELEGRAM</a>
+                                <a href="#" class="mobile-social-link">INSTAGRAM</a>
+                            </div>
+                            
                         </div>
                     </div>
+                    
                 </section>
             </div>
         </div>
@@ -153,51 +214,43 @@
             
             // УЛУЧШЕННАЯ логика для dropdown меню
             const navItems = document.querySelectorAll('.nav-item');
-            
+
             navItems.forEach(item => {
                 const dropdown = item.querySelector('.dropdown');
                 
                 if (dropdown) {
-                    let timeoutId;
+                    let hideTimeout;
                     
-                    // При наведении на nav-item
-                    item.addEventListener('mouseenter', () => {
-                        clearTimeout(timeoutId);
+                    const showDropdown = () => {
+                        clearTimeout(hideTimeout);
                         dropdown.style.display = 'flex';
-                        // Небольшая задержка для плавного появления
                         setTimeout(() => {
                             dropdown.style.opacity = '1';
                             dropdown.style.visibility = 'visible';
                         }, 10);
-                    });
+                    };
+                    
+                    const hideDropdown = () => {
+                        hideTimeout = setTimeout(() => {
+                            dropdown.style.opacity = '0';
+                            dropdown.style.visibility = 'hidden';
+                            setTimeout(() => {
+                                dropdown.style.display = 'none';
+                            }, 200);
+                        }, 400); // Увеличена задержка до 400ms для более комфортного использования
+                    };
+                    
+                    // При наведении на nav-item
+                    item.addEventListener('mouseenter', showDropdown);
                     
                     // При уходе курсора с nav-item
-                    item.addEventListener('mouseleave', () => {
-                        // Задержка перед скрытием
-                        timeoutId = setTimeout(() => {
-                            dropdown.style.opacity = '0';
-                            dropdown.style.visibility = 'hidden';
-                            setTimeout(() => {
-                                dropdown.style.display = 'none';
-                            }, 200);
-                        }, 150); // 150ms задержка - можно увеличить до 300ms
-                    });
+                    item.addEventListener('mouseleave', hideDropdown);
                     
-                    // Отменяем скрытие если навелись на dropdown
-                    dropdown.addEventListener('mouseenter', () => {
-                        clearTimeout(timeoutId);
-                    });
+                    // При наведении на dropdown
+                    dropdown.addEventListener('mouseenter', showDropdown);
                     
-                    // Скрываем при уходе с dropdown
-                    dropdown.addEventListener('mouseleave', () => {
-                        timeoutId = setTimeout(() => {
-                            dropdown.style.opacity = '0';
-                            dropdown.style.visibility = 'hidden';
-                            setTimeout(() => {
-                                dropdown.style.display = 'none';
-                            }, 200);
-                        }, 150);
-                    });
+                    // При уходе с dropdown
+                    dropdown.addEventListener('mouseleave', hideDropdown);
                 }
             });
         });

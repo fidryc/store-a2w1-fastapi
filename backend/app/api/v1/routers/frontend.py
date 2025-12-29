@@ -31,6 +31,28 @@ async def home(request: Request, base_page_service: BasePageServiceDep):
     except (CollectionServiceException) as e:
         raise HTTPException(e.status_code, e.args[0])
 
+  
+@router.get("/all", response_class=HTMLResponse, name="home")
+async def all_products(request: Request, base_page_service: BasePageServiceDep, uow: UOWDep):
+    """Главная страница"""
+    try:
+        collection_service=CollectionService(uow=uow)
+        product_service=ProductService(uow=uow, collection_service=collection_service)
+        base_page_data = await base_page_service.get_home_page_data()
+        return templates.TemplateResponse(
+            request=request, 
+            name="all_products.html", 
+            context={
+                "request": request,
+                "base_page_data": base_page_data,
+                "products": await product_service.all_products()
+                
+                }
+        )
+    except (CollectionServiceException) as e:
+        raise HTTPException(e.status_code, e.args[0])
+
+
 @router.get(
     "/collections/collection_category_id/{collection_category_id}",
     response_class=HTMLResponse,
@@ -44,8 +66,10 @@ async def collections_by_cat_id(
 ):
     """Страница коллекций по id категории"""
     try:
+        collection_service=CollectionService(uow=uow)
         collection_page_service = CollectionsPageService(
-            collection_service=CollectionService(uow=uow)
+            collection_service=collection_service,
+            product_service=ProductService(uow=uow, collection_service=collection_service)
         )
         return templates.TemplateResponse(
             request=request, 
@@ -66,32 +90,62 @@ async def collections_by_cat_id(
     response_class=HTMLResponse,
     name="collection_by_id"
 )
-async def collections_by_cat_id(
+async def collections_by_id(
     request: Request,
     uow: UOWDep,
     base_page_service: BasePageServiceDep,
     collection_id: int
 ):
-    """Товары коллекции"""
-    # try:
-    #     collection_page_service = CollectionsPageService(
-    #         collection_service=CollectionService(uow=uow)
-    #     )
-    #     return templates.TemplateResponse(
-    #         request=request, 
-    #         name="collections_by_cat_id.html", 
-    #         context={
-    #             "request": request,
-    #             "base_page_data": await base_page_service.get_home_page_data(),
-    #             "collection_page_data": await collection_page_service.get_collections_page_data(
-    #                 collection_category_id=collection_category_id
-    #             )
-    #         }
-    #     )
-    # except (CollectionServiceException) as e:
-    #     raise HTTPException(e.status_code, e.args[0])
+    """Получение страницы с товаром коллекции"""
+    try:
+        collection_service=CollectionService(uow=uow)
+        collection_page_service = CollectionsPageService(
+            collection_service=collection_service,
+            product_service=ProductService(uow=uow, collection_service=collection_service)
+        )
+        return templates.TemplateResponse(
+            request=request, 
+            name="collection_by_id.html", 
+            context={
+                "request": request,
+                "base_page_data": await base_page_service.get_home_page_data(),
+                "collection_page_data": await collection_page_service.get_collection_by_id_page_data(collection_id=collection_id)
+            }
+        )
+    except (CollectionServiceException) as e:
+        raise HTTPException(e.status_code, e.args[0])
     
 
+@router.get(
+    "/posters_stickers",
+    response_class=HTMLResponse,
+    name="posters_stickers"
+)
+async def posters_stickers(
+    request: Request,
+    uow: UOWDep,
+    base_page_service: BasePageServiceDep
+):
+    """Получение страницы постеров и стикеров"""
+    try:
+        collection_service=CollectionService(uow=uow)
+        collection_page_service = CollectionsPageService(
+            collection_service=collection_service,
+            product_service=ProductService(uow=uow, collection_service=collection_service)
+        )
+        return templates.TemplateResponse(
+            request=request, 
+            name="collection_by_id.html", 
+            context={
+                "request": request,
+                "base_page_data": await base_page_service.get_home_page_data(),
+                "posters_stickers_data": await collection_page_service.get_posters_and_stickers_page_data()
+            }
+        )
+    except (CollectionServiceException) as e:
+        raise HTTPException(e.status_code, e.args[0])
+    
+    
 @router.get(
     "/product/{product_id}",
     response_class=HTMLResponse,
@@ -120,3 +174,20 @@ async def product_by_id(
     except (ProductServiceException) as e:
         raise HTTPException(e.status_code, e.args[0])
     
+@router.get(
+    "/test",
+    response_class=HTMLResponse,
+    name="test"
+)
+async def test(
+    request: Request,
+    uow: UOWDep,
+):
+    """Получение страницы с товаром коллекции"""
+    product_service = ProductService(uow=uow, collection_service=CollectionService(uow))
+    try:
+        await product_service.all_products()
+    except Exception as e:
+        print(e.args[0])
+        
+        

@@ -15,6 +15,7 @@
     {% set mod = loop.index % 3 %}
     {% set is_empty = collection is none %}
     {% set top_margin = "100px" if mod == 0 else "0" %}
+    {% set top_margin = "300px" if mod == 1 and not loop.index == 1 else "0" %}
     <section class="collection-item mod-{{ mod if mod != 0 else 0 }}" style="margin-top: {{ top_margin }};">
         <!-- ===== MEDIA (IMAGE + RED TEXTS) ===== -->
         <div class="collection-media">
@@ -71,6 +72,11 @@
                     </div>
                 {% endfor %}
             </div>
+            {% if collection %}
+                <div class="about-link" style="margin-top: 163px;">
+                    <a href="/collection/{{ collection.id }}">Перейти к коллекции</a>
+                </div>
+            {% endif %}
         </div>
     </section>
 {% endfor %}

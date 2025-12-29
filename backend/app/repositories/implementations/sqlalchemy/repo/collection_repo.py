@@ -11,7 +11,9 @@ from app.repositories.utils.serializer import Serializer
 class CollectionRepository(ICollectionRepository, BaseSQLAlchemyRepository[CollectionDTO, Collection]):
     model = Collection
     
-    async def collections_with_category_and_photo(self, **filters) -> list[CollectionWithDetailsDTO]:
+    async def collections_with_category_and_photo(
+        self, **filters
+    ) -> list[CollectionWithDetailsDTO]:
         query = select(
             self.model
         ).where(
@@ -21,4 +23,9 @@ class CollectionRepository(ICollectionRepository, BaseSQLAlchemyRepository[Colle
             joinedload(self.model.collection_category)
         )
         result = await self.session.execute(query)
-        return [Serializer.serialize_to_dto(CollectionWithDetailsDTO, model) for model in result.scalars().all()]
+        return [
+            Serializer.serialize_to_dto(
+                CollectionWithDetailsDTO, model
+            ) 
+            for model in result.scalars().all()
+        ]

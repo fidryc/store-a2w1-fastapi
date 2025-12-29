@@ -1,10 +1,11 @@
-from venv import logger
+from app.core.logger import logger
 from fastapi import Depends, HTTPException, UploadFile, APIRouter
 from app.api.v1.dependency.uow import UOWDep
 
 from app.api.v1.dependency.user import AdminDep, get_admin
 from app.services.exceptions.photo import PhotoServiceException
 from app.services.implementations.photo_service import PhotoService
+
 
 router = APIRouter(
     prefix="/api/v1/images",
@@ -16,7 +17,7 @@ router = APIRouter(
     dependencies=[Depends(get_admin)]
 )
 async def upload_file(path: str, uow: UOWDep, file: UploadFile):
-    # проверка прав. Проверка уникальности path. Сжатие. 
+    #TODO: Проверка уникальности path. Сжатие. 
     
     try:
         photo_service = PhotoService(uow)
@@ -43,7 +44,3 @@ async def delete_file(path: str, uow: UOWDep):
     except Exception as e:
         logger.critical("Unknow error in delete-file", exc_info=True, extra={"path": path})
         raise HTTPException(status_code=e.status_code, detail=e.args[0])
-    
-@router.get("/admin-stuff")
-async def admin_route(user: AdminDep):
-    return {"ok": True}

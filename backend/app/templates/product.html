@@ -42,7 +42,11 @@
         <h1 class="product-title">{{ product.product.title }}</h1>
         
         {% if product.product.description %}
-        <div class="product-description">{{ product.product.description }}</div>
+            <div class="product-description">
+                {% for part in product.product.description.split(';') %}
+                    <div class="product-description__item">{{ part|trim }}</div>
+                {% endfor %}
+            </div>
         {% endif %}
 
         <!-- Размеры -->
@@ -166,7 +170,7 @@
             : `Здравствуйте! Хочу заказать ${productTitle}`;
         
         // Замените на ваш Telegram username или ссылку
-        const telegramUrl = `https://t.me/yourusername?text=${encodeURIComponent(message)}`;
+        const telegramUrl = `https://t.me/AndreyWay21?text=${encodeURIComponent(message)}`;
         window.open(telegramUrl, '_blank');
         {% endif %}
     }

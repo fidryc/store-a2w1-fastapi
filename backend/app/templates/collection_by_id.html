@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-indent">
+    {% if collection_page_data %}
+
+        {% for group in collection_page_data.grouped_by_base_category %}
+        <section class="category-section">
+            <div class="category-header">
+                <h2 class="category-title">{{ group.base_category.title }}</h2>
+                <div class="category-divider"></div>
+                <div class="category-limit">
+                    {% if group.limit_quantity %}
+                        ограниченый тираж<br>{{ group.limit_quantity.quantity }} штк на каждый экземпляр.
+                    {% else %}
+                        постеры не имеют<br>ограничения по тиражу.
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="products-grid">
+                {% for product in group.products %}
+                <div class="product-card">
+                    <div class="product-image">
+                        {% if product.photos %}
+                            {% set primary_photo = product.photos|selectattr('is_primary', 'equalto', true)|first %}
+                            {% if primary_photo %}
+                            <img src="/static/uploads//{{ primary_photo.photo.file_path }}.jpg" alt="{{ product.title }}">
+                            {% else %}
+                            <img src="/static/uploads//{{ product.photos[0].photo.file_path }}.jpg" alt="{{ product.title }}">
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-status about-link"><a href="/product/{{ product.id }}">Заказать</a></div>
+                        {% if group.limit_quantity %}
+                        <div class="product-quantity">{{ product.simple_quantity }}/{{ group.limit_quantity.quantity }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+
+    {% elif posters_stickers_data %}
+        {% for group in posters_stickers_data.grouped_by_base_category %}
+        <section class="category-section">
+            <div class="category-header">
+                <h2 class="category-title">{{ group.base_category.title }}</h2>
+                <div class="category-divider"></div>
+                <div class="category-limit">
+                    {% if group.limit_quantity %}
+                        ограниченый тираж<br>{{ group.limit_quantity.quantity }} штк на каждый экземпляр.
+                    {% else %}
+                        постеры не имеют<br>ограничения по тиражу.
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="products-grid">
+                {% for product in group.products %}
+                <div class="product-card">
+                    <div class="product-image">
+                        {% if product.photos %}
+                            {% set primary_photo = product.photos|selectattr('is_primary', 'equalto', true)|first %}
+                            {% if primary_photo %}
+                            <img src="/static/uploads//{{ primary_photo.photo.file_path }}.jpg" alt="{{ product.title }}">
+                            {% else %}
+                            <img src="/static/uploads//{{ product.photos[0].photo.file_path }}.jpg" alt="{{ product.title }}">
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-status about-link"><a href="/product/{{ product.id }}">Заказать</a></div>
+                        {% if group.limit_quantity %}
+                        <div class="product-quantity">{{ product.simple_quantity }}/{{ group.limit_quantity.quantity }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

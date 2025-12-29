@@ -3,11 +3,11 @@ from app.api.v1.dependency.uow import UOWDep
 from app.repositories.implementations.sqlalchemy.base_uow import BaseUOW
 import aiofiles
 
-from app.api.v1.dependency.user import AdminDep, CurrentUserDep
+from app.api.v1.dependency.user import CurrentUserDep
 from app.services.exceptions.user import UserServiceException
 from app.services.implementations.user_service import UserService
 from app.core.logger import logger
-from app.utils.jwt import set_token
+from app.utils.jwt.jwt import set_token
 
 router = APIRouter(
     prefix="/api/v1/users",
@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 @router.get("/login")
-async def test(response: Response, email: str, pwd: str, uow: UOWDep):
+async def login(response: Response, email: str, pwd: str, uow: UOWDep):
     try:
         user_service = UserService(uow)
         new_tokens = await user_service.login(email=email, pwd=pwd)

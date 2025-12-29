@@ -3,6 +3,7 @@ from app.db.models.models import (
     CollectionCategory, Photo, Size, Material, Color, BaseCategory, SubCategory,
     Product, ProductVariant, Collection, ProductPhoto, User
 )
+from markupsafe import Markup
 
 
 class SizeAdmin(ModelView, model=Size):
@@ -44,6 +45,11 @@ class ProductAdmin(ModelView, model=Product):
         Product.base_category_id, Product.sub_category_id,
         Product.material_id, Product.simple_quantity
     ]
+    # скрывает relationship из формы создания/редактирования
+    form_excluded_columns = ["photos"]
+
+    # скрывает relationship со страницы деталей
+    column_details_exclude_list = ["photos"]
     column_searchable_list = [Product.title]
     column_sortable_list = [Product.id, Product.title, Product.base_price]
 
@@ -57,11 +63,6 @@ class ProductVariantAdmin(ModelView, model=ProductVariant):
         ProductVariant.price_modifier,
         ProductVariant.quantity
     ]
-    # column_sortable_list = [
-    #     ProductVariant.id,
-    #     ProductVariant.price_modifier,
-    #     ProductVariant.quantity
-    # ]
 
 
 class CollectionAdmin(ModelView, model=Collection):
@@ -70,35 +71,63 @@ class CollectionAdmin(ModelView, model=Collection):
     column_sortable_list = [Collection.id, Collection.title]
 
 
-# class CollectionProductAdmin(ModelView, model=CollectionProduct):
-#     column_list = [
-#         CollectionProduct.id,
-#         CollectionProduct.collection_id,
-#         CollectionProduct.product_id
-#     ]
-#     column_sortable_list = [CollectionProduct.id]
-
-
 class ProductPhotoAdmin(ModelView, model=ProductPhoto):
     column_list = [
         ProductPhoto.id,
         ProductPhoto.product_id,
         ProductPhoto.photo_id,
         ProductPhoto.is_primary,
-        ProductPhoto.sort_order
+        ProductPhoto.sort_order,
+        "photo_preview"
     ]
     column_sortable_list = [ProductPhoto.id, ProductPhoto.sort_order]
+    
+    @staticmethod
+    def photo_preview(obj, _):
+        if not obj.photo:
+            return "—"
+
+        return Markup(
+            f"""
+            <img 
+                src="/static/uploads/{obj.photo.file_path}.jpg"
+                style="
+                    height: 120px;
+                    border-radius: 8px;
+                    object-fit: cover;
+                "
+            />
+            """
+        )
+
+    column_formatters = {
+        "photo_preview": photo_preview
+    }
+
+    column_labels = {
+        "photo_preview": "Фото"
+    }
     
 class PhotoAdmin(ModelView, model=Photo):
     column_list = [
         Photo.id,
         Photo.file_path,
+        "preview"
     ]
     column_sortable_list = [Photo.id, Photo.file_path]
     
     can_delete = False
     can_edit = False
     can_create = False
+    
+    def preview(self, obj):
+        return Markup(
+            f'<img src="/static/uploads/{obj.file_path}.jpg" height="700">'
+        )
+
+    column_formatters = {
+        "preview": lambda obj, _: PhotoAdmin.preview(None, obj)
+    }
     
 
 class UserAdmin(ModelView, model=User):

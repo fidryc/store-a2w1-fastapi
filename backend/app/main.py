@@ -25,6 +25,7 @@ from app.core.logger import logger
 from fastapi.openapi.docs import get_swagger_ui_html
 
 from app.api.v1.middlewares.check_admin import IsAdminMiddleware
+from app.utils.add_admin_views import add_views
 
 app = FastAPI(
     docs_url=None,
@@ -43,36 +44,9 @@ app.include_router(test_router)
 admin = Admin(app, engine, middlewares=[Middleware(IsAdminMiddleware),])
 
 # Заменить на функцию добавление наследников из файла ModelView
-admin.add_view(SizeAdmin)
-admin.add_view(MaterialAdmin)
-admin.add_view(ColorAdmin)
-admin.add_view(BaseCategoryAdmin)
-admin.add_view(SubCategoryAdmin)
-admin.add_view(ProductAdmin)
-admin.add_view(ProductVariantAdmin)
-admin.add_view(CollecctionCategoryAdmin)
-admin.add_view(CollectionAdmin)
-admin.add_view(ProductPhotoAdmin)
-admin.add_view(UserAdmin)
-admin.add_view(PhotoAdmin)
 
-@app.get("/test")
-async def test():
-    async with BaseUOW() as uow:
-        pr_service = ProductService(uow)
-        cl_service = CollectionService(uow, product_service=pr_service)
-        # print(await cl_service.get_products_by_collection_id(collection_id=))
-        print(await pr_service.get_product_by_id(id=1, desc_photo=True))
-    
-@app.middleware("http")
-async def check_time(request: Request, call_next):
-    start = datetime.datetime.now()
-    response = await call_next(request)
-    time_request = (datetime.datetime.now() - start).total_seconds()
-    logger.debug("Time for request", extra={"sectonds": time_request})
-    return response
+add_views(admin.add_view)
 
-# Проверка admin роли у пользователя перед тем как отдавать swagger
 @app.get("/docs", include_in_schema=False)
 async def custom_docs(user: CurrentUserDep, response: Response):
     if user.role != "admin":

@@ -5,7 +5,7 @@ from app.schemas.dto import UserDTO
 from app.services.exceptions.user import UserServiceException
 from app.schemas.dataclasses import AuthTokens
 from app.core.config import settings
-from app.utils.jwt import set_token, create_delete_cookie_headers
+from app.utils.jwt.jwt import set_token
     
     
 async def get_auth_tokens(request: Request) -> AuthTokens:
