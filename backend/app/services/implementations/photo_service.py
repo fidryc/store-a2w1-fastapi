@@ -61,10 +61,10 @@ class PhotoService:
     async def delete(self, file_path: str) -> list[int]:
         """Удаление фотки с сервера и из базы"""
         self.__validate_file_name(file_path)
-        path = f"app/static/images/{file_path}.jpg"
+        path = f"app/static/uploads/{file_path}.jpg"
         if not os.path.exists(path):
             raise PhotoServiceException(
-                "Такого файла не существующего файла",
+                "Такого файла не существующеет",
                 status_code=status.HTTP_409_CONFLICT
             )
         try:
