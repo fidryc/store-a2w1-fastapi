@@ -1,11 +1,8 @@
-from dataclasses import dataclass
 from app.services.interfaces.abc_collection_sertice import ICollectionService
-from app.application.exception.base import ApplicationServiceException, ApplicationServiceException
 from app.schemas.dto import CollectionCategoryDTO
-from app.schemas.filters import CollectionCategoryFilters, CollectionFilters
+from app.schemas.filters import CollectionCategoryFilters
 from app.application.responsens.base_page import BasePageResponse
-from app.repositories.exceptions.base_exc import RepositoryExc
-from app.constants.constants import CollectionCategorySlug
+from app.constants.db import CollectionCategorySlug
 
 class BasePageService:
     def __init__(self, collection_service: ICollectionService):

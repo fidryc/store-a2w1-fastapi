@@ -1,7 +1,6 @@
-from app.repositories.interfaces.abc_base_uow import IBaseUOW
 from app.services.interfaces.abc_collection_sertice import ICollectionService
 from app.application.responsens.collections_page import CollectionByIdPageResponse, CollectionsByCatIdPageResponse, GroupedByBaseCategory, PostersAndStickersPageResponse
-from app.constants.constants import BaseCategorySlug
+from app.constants.db import BaseCategorySlug
 from app.schemas.dto import ProductWithCategoriesDTO
 from app.services.interfaces.abc_product_service import IProductService
 
@@ -14,9 +13,7 @@ class CollectionsPageService:
         collections = await self.collection_service.collections_by_cat_id(cat_id=collection_category_id)
         return CollectionsByCatIdPageResponse.model_construct(
             collections=collections
-        )
-        
-        
+        ) 
         
     async def get_collection_by_id_page_data(self, collection_id: int) -> CollectionByIdPageResponse:
         collection = await self.collection_service.collection_by_id(collection_id=collection_id)
@@ -41,7 +38,7 @@ class CollectionsPageService:
         
         grouped = await self._group_products_by_base_cat(
             products=all_products,
-            collection_id=None  # НЕ получаем лимиты → будет None
+            collection_id=None  # НЕ получаем лимиты -> будет None
         )
         
         return PostersAndStickersPageResponse(

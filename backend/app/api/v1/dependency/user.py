@@ -28,24 +28,21 @@ async def get_user(
             set_token(
                 response=response,
                 token=new_auth_tokens.access_token,
-                type="access"
+                type_="access"
             )
         if new_auth_tokens.is_refresh_token_update:
             set_token(
                 response=response,
                 token=new_auth_tokens.refresh_token,
-                type="refresh"
+                type_="refresh"
             )
             new_auth_tokens.is_refresh_token_update = False
         user = await user_service.get_user_from_token(auth_tokens=new_auth_tokens)
         return user
     except UserServiceException as e:
-        # response.delete_cookie(settings.JWT_ACCESS_TOKEN_NAME)
-        # response.delete_cookie(settings.JWT_REFRESH_TOKEN_NAME)
         raise HTTPException(
             e.status_code,
             "Пользователь не зарегестрирован",
-            # headers=create_delete_cookie_headers()
             )
 
 CurrentUserDep = Annotated[UserDTO, Depends(get_user)]

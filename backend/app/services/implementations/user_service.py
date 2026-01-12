@@ -31,14 +31,12 @@ class UserService(IUserService):
         
     async def refresh_tokens(self, auth_tokens: AuthTokens) -> AuthTokens:
         """Проверка и получение новых токенов для аутенфикации. Refresh токен пока не обновляется для безопасности"""
-        
         # Сначала пробуем access token
         try:
             if not auth_tokens.access_token:
                 raise AbsenceAccessJWTExc
             
             token_payload = get_token_payload(
-                type_="access",
                 token=auth_tokens.access_token
             )
             validate_payload_fields(type_="access", token_payload=token_payload)
@@ -50,7 +48,6 @@ class UserService(IUserService):
                     raise AbsenceRefreshJWTExc
                 
                 token_payload = get_token_payload(
-                    type_="refresh",
                     token=auth_tokens.refresh_token
                 )
                 validate_payload_fields(type_="refresh", token_payload=token_payload)
@@ -68,14 +65,16 @@ class UserService(IUserService):
         except ValueError as e:
            raise UserServiceException(
                 "Ошибка валидации токена",
-                status_code=422
+                status_code=401
             ) from e
            
         return auth_tokens
            
     async def get_user_from_token(self, auth_tokens: AuthTokens) -> UserDTO:
-        """Получение user из токенов"""
-        access_token_payload = get_token_payload(type_="access", token=auth_tokens.access_token)
+        """Получение user из токенов. Получаем пользователя по access токену"""
+        if not auth_tokens.access_token:
+            raise UserServiceException("You should register", status_code=401)
+        access_token_payload = get_token_payload(token=auth_tokens.access_token)
         try:
             user = await self.uow.user_repo.get_by_filters(email=access_token_payload["user_email"])
         except RepositoryExc as e:
@@ -90,7 +89,7 @@ class UserService(IUserService):
         try:
             user_by_email = (await self.uow.user_repo.get_by_filters(email=email))
         except RepositoryExc as e:
-            raise UserServiceException("User repository: failed get by email", status_code=500)
+            raise UserServiceException("User repository: failed get by email", status_code=500) from e
         
         if len(user_by_email) != 0:
             raise UserServiceException("Пользователь с таким email уже существует", status_code=409)
@@ -99,5 +98,5 @@ class UserService(IUserService):
             id = (await self.uow.user_repo.add({"email": email, "hashed_password": get_hash(pwd)}))
             return id
         except RepositoryExc as e:
-            raise UserServiceException("User repository: failed add user", status_code=500)
+            raise UserServiceException("User repository: failed add user", status_code=500) from e
         

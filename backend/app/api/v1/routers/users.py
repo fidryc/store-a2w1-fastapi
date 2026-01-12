@@ -1,7 +1,5 @@
 from fastapi import HTTPException, Response, APIRouter
 from app.api.v1.dependency.uow import UOWDep
-from app.repositories.implementations.sqlalchemy.base_uow import BaseUOW
-import aiofiles
 
 from app.api.v1.dependency.user import CurrentUserDep
 from app.services.exceptions.user import UserServiceException
@@ -26,7 +24,3 @@ async def login(response: Response, email: str, pwd: str, uow: UOWDep):
     except Exception as e:
         logger.critical("Unknow error in login", exc_info=True, extra={"email": email, "pwd": pwd})
         raise HTTPException(status_code=500, detail=e.args[0])
-    
-@router.get("/test")
-async def test(user: CurrentUserDep):
-    print(user)

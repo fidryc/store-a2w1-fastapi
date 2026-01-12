@@ -1,3 +1,5 @@
+"""Константы значений полей записей в бд"""
+
 class CollectionCategorySlug:
     COLLECTION = "collection"
     CAPSULE = "capsule"

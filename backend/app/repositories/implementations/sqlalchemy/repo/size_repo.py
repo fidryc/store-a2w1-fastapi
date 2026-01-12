@@ -1,5 +1,3 @@
-from typing import Any
-from sqlalchemy import text
 from app.db.models.models import Size
 from app.repositories.implementations.sqlalchemy.base_repo import BaseSQLAlchemyRepository
 from app.schemas.dto import SizeDTO

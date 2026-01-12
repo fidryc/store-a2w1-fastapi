@@ -10,7 +10,7 @@ from app.core.logger import logger
 from app.utils.jwt.exceptions import TimeExpireAccessJWTExc
 
 
-def create_token(email: str, type: str) -> str:
+def create_token(email: str, type: Literal["access", "refresh"]) -> str:
     """Создает токены access и refresh"""
     jti = str(uuid.uuid4())
     if type == "access":
@@ -31,11 +31,11 @@ def create_token(email: str, type: str) -> str:
     return jwt
 
 
-def set_token(response: Response, token: str, type):
+def set_token(response: Response, token: str, type_: Literal["access", "refresh"]):
     """Cохраняет в cookie access или refresh токен в cookie"""
-    if type == "access":
+    if type_ == "access":
         response.set_cookie(settings.JWT_ACCESS_TOKEN_NAME, token, httponly=True)
-    if type == "refresh":
+    elif type_ == "refresh":
         response.set_cookie(
             settings.JWT_REFRESH_TOKEN_NAME,
             token,
@@ -44,7 +44,7 @@ def set_token(response: Response, token: str, type):
         )
 
 
-def get_token_payload(type_: Literal["access", "refresh"], token: str) -> dict:
+def get_token_payload(token: str) -> dict:
     """Получает payload access токена из cookie"""
     try:
         payload: dict = decode(

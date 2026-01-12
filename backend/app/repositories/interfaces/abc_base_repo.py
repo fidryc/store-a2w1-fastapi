@@ -1,10 +1,10 @@
-from typing import Any, Protocol, Generic, TypeVar
+from typing import Any, Protocol, Generic, Type, TypeVar
 
 DTO = TypeVar("DTO")
 Model = TypeVar("MODEL")
 
 class IBaseRepository(Protocol, Generic[DTO, Model]):
-    model: Model
+    model: Type[Model]
     
     def __init__(self, session: Any):
         self.session = session

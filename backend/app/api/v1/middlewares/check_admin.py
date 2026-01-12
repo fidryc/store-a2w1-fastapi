@@ -36,20 +36,20 @@ class IsAdminMiddleware(BaseHTTPMiddleware):
                     status_code=401,
                     content={"detail": "Требуется авторизация"},
                 )
-
+        
         response = await call_next(request)
 
         if new_auth_tokens.is_access_token_update:
             set_token(
                 response=response,
                 token=new_auth_tokens.access_token,
-                type="access"
+                type_="access"
             )
         if new_auth_tokens.is_refresh_token_update:
             set_token(
                 response=response,
                 token=new_auth_tokens.refresh_token,
-                type="refresh"
+                type_="refresh"
             )
 
         return response

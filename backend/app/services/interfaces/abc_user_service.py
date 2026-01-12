@@ -11,5 +11,5 @@ class IUserService(Protocol):
     
     async def get_user_from_token(self, auth_tokens: AuthTokens) -> UserDTO: ...
     
-    async def register(email: str, password: str):
+    async def register(email: str, pwd: str) -> None:
         ...

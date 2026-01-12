@@ -5,10 +5,8 @@ from app.services.implementations.collection_service import CollectionService
 
 from app.api.v1.dependency.uow import UOWDep
 from app.services.exceptions.collection import CollectionServiceException
-from app.application.services.base_page import BasePageService
 from app.api.v1.dependency.application import BasePageServiceDep
 from app.application.services.collections_page import CollectionsPageService
-from app.application.utils.separation_text_helper import SeparationTextBySymbol
 from app.services.implementations.product_service import ProductService
 from app.services.exceptions.product import ProductServiceException
 
@@ -49,7 +47,7 @@ async def all_products(request: Request, base_page_service: BasePageServiceDep, 
                 
                 }
         )
-    except (CollectionServiceException) as e:
+    except (CollectionServiceException, ProductServiceException) as e:
         raise HTTPException(e.status_code, e.args[0])
 
 
@@ -82,7 +80,7 @@ async def collections_by_cat_id(
                 )
             }
         )
-    except (CollectionServiceException) as e:
+    except (CollectionServiceException, ProductServiceException) as e:
         raise HTTPException(e.status_code, e.args[0])
     
 @router.get(
@@ -112,7 +110,7 @@ async def collections_by_id(
                 "collection_page_data": await collection_page_service.get_collection_by_id_page_data(collection_id=collection_id)
             }
         )
-    except (CollectionServiceException) as e:
+    except (CollectionServiceException, ProductServiceException) as e:
         raise HTTPException(e.status_code, e.args[0])
     
 
@@ -142,7 +140,7 @@ async def posters_stickers(
                 "posters_stickers_data": await collection_page_service.get_posters_and_stickers_page_data()
             }
         )
-    except (CollectionServiceException) as e:
+    except (CollectionServiceException, ProductServiceException) as e:
         raise HTTPException(e.status_code, e.args[0])
     
     
@@ -171,23 +169,7 @@ async def product_by_id(
                     "product": product,
                 }
             )
-    except (ProductServiceException) as e:
+    except (ProductServiceException, ProductServiceException) as e:
         raise HTTPException(e.status_code, e.args[0])
-    
-@router.get(
-    "/test",
-    response_class=HTMLResponse,
-    name="test"
-)
-async def test(
-    request: Request,
-    uow: UOWDep,
-):
-    """Получение страницы с товаром коллекции"""
-    product_service = ProductService(uow=uow, collection_service=CollectionService(uow))
-    try:
-        await product_service.all_products()
-    except Exception as e:
-        print(e.args[0])
         
         

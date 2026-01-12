@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import Type, TypeVar
 
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,15 +15,17 @@ DTO = TypeVar("DTO", bound=BaseModel)
 Model = TypeVar("MODEL", bound=Base)
 
 class BaseSQLAlchemyRepository(IBaseRepository[DTO, Model]):
-    model: Model
+    model: Type[Model]
     
     def __init__(self, session: AsyncSession):
         self.session = session
     
-    async def get_by_id(self, id: int) -> DTO:
+    async def get_by_id(self, id: int) -> DTO | None:
         try:
             query = select(self.model).where(self.model.id == id)
             obj = (await self.session.execute(query)).scalar_one_or_none()
+            if obj is None:
+                return None
             return self.model.serialize_to_dto(obj)
         except SQLAlchemyError as e:
             logger.warning(
@@ -61,7 +63,13 @@ class BaseSQLAlchemyRepository(IBaseRepository[DTO, Model]):
         
     async def get_by_filters(self, **filters) -> list[DTO]:
         try:
-            query = select(self.model).where(*[getattr(self.model, k) == v for k, v in filters.items()])
+            try:
+                query = select(self.model).where(
+                    *[getattr(self.model, k) == v
+                    for k, v in filters.items()]
+                )
+            except AttributeError as e:
+                raise RepositoryExc(f"Invalid filter field") from e
             objs = (await self.session.execute(query)).scalars().all()
             return [self.model.serialize_to_dto(obj) for obj in objs]
         except SQLAlchemyError as e:
@@ -72,8 +80,10 @@ class BaseSQLAlchemyRepository(IBaseRepository[DTO, Model]):
                 )
             raise RepositoryExc("Failed get by filters") from e
         
-    async def delete_by_filters(self, **filters) -> list[int]:
+    async def delete_by_filters(self, check_filters=True, **filters) -> list[int]:
         try:
+            if check_filters and not filters:
+                raise RepositoryExc("Failed delete all rows. Use check_filters=False")
             query = delete(self.model).where(*[getattr(self.model, k) == v for k, v in filters.items()]).returning(self.model.id)
             ids = (await self.session.execute(query)).scalars().all()
             return ids

@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer, ForeignKey, Numeric, Boolean, Text
+from sqlalchemy import String, Integer, ForeignKey, Numeric, Boolean, Text, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import relationship
 from typing import Optional
@@ -16,7 +16,7 @@ class Size(SizeMixin, Base):
     title: Mapped[str] = mapped_column(String(64), index=True)
     base_category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("base_categories.id"), index=True)
 
-    base_category = relationship("BaseCategory", back_populates="size")
+    base_category = relationship("BaseCategory", back_populates="size", lazy="selectin")
     
     def __str__(self):
         return f"Size: {self.title}"
@@ -50,8 +50,8 @@ class BaseCategory(BaseCategoryMixin, Base):
     title: Mapped[str] = mapped_column(String(64))
     slug: Mapped[str] = mapped_column(String(64))
 
-    size = relationship("Size", back_populates="base_category")
-    sub_category = relationship("SubCategory", back_populates="base_category")
+    size = relationship("Size", back_populates="base_category", lazy="selectin")
+    sub_category = relationship("SubCategory", back_populates="base_category", lazy="selectin", cascade="all, delete-orphan")
     
     def __str__(self):
         return f"Base Category: {self.title}"
@@ -65,7 +65,7 @@ class SubCategory(SubCategoryMixin, Base):
     title: Mapped[str] = mapped_column(String(64))
     slug: Mapped[str] = mapped_column(String(64))
 
-    base_category = relationship("BaseCategory", back_populates="sub_category")
+    base_category = relationship("BaseCategory", back_populates="sub_category", lazy="selectin")
     
     def __str__(self):
         return f"Sub Category: {self.title}"
@@ -84,11 +84,11 @@ class Product(ProductMixin, Base):
     collection_id: Mapped[Optional[int]] = mapped_column(ForeignKey("collections.id"), index=True, nullable=True)
     simple_quantity: Mapped[int] = mapped_column(Integer)
     
-    material = relationship("Material")
-    base_category = relationship("BaseCategory")
-    sub_category = relationship("SubCategory")
-    collection = relationship("Collection")
-    photos = relationship("ProductPhoto")
+    material = relationship("Material", lazy="selectin")
+    base_category = relationship("BaseCategory", lazy="selectin")
+    sub_category = relationship("SubCategory", lazy="selectin")
+    collection = relationship("Collection", lazy="selectin")
+    photos = relationship("ProductPhoto", lazy="selectin", cascade="all, delete-orphan")
     
     def __str__(self):
         return f"Product: {self.title}"
@@ -104,13 +104,16 @@ class ProductVariant(ProductVariantMixin, Base):
     price_modifier: Mapped[float] = mapped_column(Numeric(10, 2), default=0)
     quantity: Mapped[int] = mapped_column(Integer, default=0)
 
-    product = relationship("Product")
-    size = relationship("Size", lazy="select")
-    color = relationship("Color")
+    product = relationship("Product", lazy="selectin")
+    size = relationship("Size", lazy="selectin")
+    color = relationship("Color", lazy="selectin")
     
     def __str__(self):
         return f"Product variant #{self.id}"
 
+    __table_args__ = (
+        UniqueConstraint("product_id", "size_id", "color_id"),
+    )
 
 class CollectionCategory(CollectionCategoryMixin, Base):
     __tablename__ = "collection_categories"
@@ -134,8 +137,8 @@ class Collection(CollectionMixin, Base):
     photo_id: Mapped[int] = mapped_column(ForeignKey("photos.id"), index=True)
     collection_category_id: Mapped[int] = mapped_column(ForeignKey("collection_categories.id"), index=True)
     
-    photo = relationship("Photo")
-    collection_category = relationship("CollectionCategory")
+    photo = relationship("Photo", lazy="selectin")
+    collection_category = relationship("CollectionCategory", lazy="selectin")
     
     def __str__(self):
         return f"Collection: {self.title}"
@@ -150,8 +153,12 @@ class CollectionProductLimit(CollectionProductLimitMixin, Base):
     base_category_id: Mapped[int] = mapped_column(ForeignKey("base_categories.id"), index=True)
     quantity: Mapped[int] = mapped_column(Integer)
     
-    collection = relationship("Collection")
-    base_category = relationship("BaseCategory")
+    collection = relationship("Collection", lazy="selectin")
+    base_category = relationship("BaseCategory", lazy="selectin")
+    
+    __table_args__ = (
+        UniqueConstraint("collection_id", "base_category_id"),
+    )
 
     
 class ProductPhoto(ProductPhotoMixin, Base):
@@ -160,10 +167,10 @@ class ProductPhoto(ProductPhotoMixin, Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
     photo_id: Mapped[int] = mapped_column(ForeignKey("photos.id"), index=True)
-    is_primary: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_primary: Mapped[bool] = mapped_column(Boolean, server_default="false")
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
     
-    product = relationship("Product")
+    product = relationship("Product", lazy="selectin")
     photo = relationship("Photo", lazy="selectin")
     
     
