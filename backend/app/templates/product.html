@@ -38,8 +38,11 @@
         {% if category %}
         <div class="collection-title">{{ category.title }}</div>
         {% endif %}
-        
-        <h1 class="product-title">{{ product.product.title }}</h1>
+        {% if product.collection %}
+            <h1 class="product-title">{{ product.collection.collection_category.title }}<br>{{ product.collection.title }}</h1>
+        {% else %}
+            <h1 class="product-title">{{ product.product.title }}</h1>
+        {% endif %}
         
         {% if product.product.description %}
             <div class="product-description">

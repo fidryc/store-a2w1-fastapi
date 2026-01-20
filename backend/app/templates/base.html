@@ -7,61 +7,111 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <div class="page-wrapper">
-        <div class="content-container">
-            <div class="content-indent">
-                <header class="header">
-                    <div class="logo">
-                        <a href="/">
-                            <img src="/static/images/logo.png" alt="A2W1" class="img-logo">
-                        </a>
-                    </div>
-                    
-                    <div class="burger" onclick="toggleMenu()">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    
-                    <nav class="nav" id="nav">
-                        <ul class="nav-menu">
-                            <li class="nav-item">
-                                <a href="/collections/collection_category_id/{{ base_page_data.large_category.id }}">коллекция</a>
-                                {% if base_page_data.collections_of_large_category %}
-                                <div class="dropdown">
-                                    {% for collection in base_page_data.collections_of_large_category %}
-                                    <a href="/collection/{{ collection.id }}">{{ collection.title }}</a>
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a href="/collections/collection_category_id/{{ base_page_data.capsule_category.id }}">капсула</a>
-                                {% if base_page_data.capsule_category %}
-                                <div class="dropdown">
-                                    {% for collection in base_page_data.collections_of_capsule_category %}
-                                    <a href="/collection/{{ collection.id }}">{{ collection.title }}</a>
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a href="/posters_stickers">постеры/стикеры</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#about">а вы кто</a>
-                            </li>
-                        </ul>
-                        <a href="https://t.me/AndreyWay21" class="telegram">telegram</a>
-                    </nav>
-                </header>
+    <!-- ФИКСИРОВАННЫЙ ХЕДЕР -->
+    <header class="header">
+        <!-- Оверлей для затемнения фона -->
+        <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+        
+        <div class="header-wrapper">
+            <div class="header-content-container">
+                <div class="logo">
+                    <a href="/">
+                        <img src="/static/images/logo.png" alt="A2W1" class="img-logo">
+                    </a>
+                </div>
+                
+                <!-- Навигация для десктопа -->
+                <nav class="nav desktop-nav" id="desktopNav">
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="/collections/collection_category_id/{{ base_page_data.large_category.id }}">коллекция</a>
+                            {% if base_page_data.collections_of_large_category %}
+                            <div class="dropdown">
+                                {% for collection in base_page_data.collections_of_large_category %}
+                                <a href="/collection/{{ collection.id }}">{{ collection.title }}</a>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="/collections/collection_category_id/{{ base_page_data.capsule_category.id }}">капсула</a>
+                            {% if base_page_data.capsule_category %}
+                            <div class="dropdown">
+                                {% for collection in base_page_data.collections_of_capsule_category %}
+                                <a href="/collection/{{ collection.id }}">{{ collection.title }}</a>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="/posters_stickers">постеры/стикеры</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#about">а вы кто</a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <!-- Телеграм для десктопа -->
+                <a href="https://t.me/AndreyWay21" class="telegram desktop-telegram">telegram</a>
+                
+                <!-- Бургер для мобильных -->
+                <div class="burger" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
+        
+        <!-- Мобильное меню (отдельно) -->
+        <!-- В блоке мобильного меню: -->
+<!-- Мобильное меню (отдельно) -->
+<nav class="nav mobile-nav" id="mobileNav">
+    <div class="mobile-nav-header">
+        <button class="close-menu" onclick="toggleMobileMenu()">×</button>
     </div>
+    <ul class="nav-menu mobile-nav-menu">
+        <li class="nav-item">
+            <a href="/collections/collection_category_id/{{ base_page_data.large_category.id }}">
+                коллекция
+            </a>
+            {% if base_page_data.collections_of_large_category %}
+            <div class="dropdown mobile-dropdown">
+                {% for collection in base_page_data.collections_of_large_category %}
+                <a href="/collection/{{ collection.id }}">{{ collection.title }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </li>
+        
+        <li class="nav-item">
+            <a href="/collections/collection_category_id/{{ base_page_data.capsule_category.id }}">
+                капсула
+            </a>
+            {% if base_page_data.capsule_category %}
+            <div class="dropdown mobile-dropdown">
+                {% for collection in base_page_data.collections_of_capsule_category %}
+                <a href="/collection/{{ collection.id }}">{{ collection.title }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </li>
+        
+        <li class="nav-item">
+            <a href="/posters_stickers">постеры/стикеры</a>
+        </li>
+        <li class="nav-item">
+            <a href="#about">а вы кто</a>
+        </li>
+    </ul>
+    <a href="https://t.me/AndreyWay21" class="telegram mobile-telegram">telegram</a>
+</nav>
+    </header>
 
-    <main>
+    <main class="main-content-wrapper">
         <div class="page-wrapper">
             <div class="content-container">
                 {% block content %}
@@ -70,6 +120,8 @@
             </div>
         </div>
     </main>
+    <!-- ... остальной код остается без изменений ... -->
+    <!-- ... остальной код остается без изменений ... -->
 
     <footer>
         <div class="page-wrapper">
@@ -175,18 +227,194 @@
     </footer>
 
     <script>
-        function toggleMenu() {
-            const nav = document.getElementById('nav');
-            const body = document.body;
-            nav.classList.toggle('active');
+// Функция для переключения мобильного меню - УПРОЩЕННАЯ
+function toggleMobileMenu() {
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+    const burger = document.querySelector('.burger');
+    
+    // Переключаем класс active
+    mobileNav.classList.toggle('active');
+    mobileNavOverlay.classList.toggle('active');
+    burger.classList.toggle('active');
+    
+    // Блокируем/разблокируем скролл
+    if (mobileNav.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+// Функция для переключения выпадающего меню
+function toggleDropdown(event) {
+    event.stopPropagation(); // Останавливаем всплытие
+    
+    const toggleBtn = event.currentTarget;
+    const navItem = toggleBtn.closest('.nav-item');
+    
+    // Закрываем другие открытые выпадающие меню
+    document.querySelectorAll('.mobile-nav-menu .nav-item.active').forEach(item => {
+        if (item !== navItem) {
+            item.classList.remove('active');
+        }
+    });
+    
+    // Переключаем текущий элемент
+    navItem.classList.toggle('active');
+}
+
+// Функция для обработки клика по ссылке
+function handleLinkClick(event) {
+    if (window.innerWidth <= 1442) {
+        // Если есть выпадающее меню, не закрываем меню сразу
+        const navItem = event.currentTarget.closest('.nav-item');
+        const hasDropdown = navItem && navItem.classList.contains('has-dropdown');
+        
+        if (!hasDropdown) {
+            // Для обычных ссылок закрываем меню
+            setTimeout(() => {
+                toggleMobileMenu();
+            }, 200);
+        }
+    }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    // Находим пункты меню с выпадающими списками
+    const mobileMenuItems = document.querySelectorAll('.mobile-nav-menu .nav-item');
+    
+    mobileMenuItems.forEach(item => {
+        const dropdown = item.querySelector('.mobile-dropdown');
+        
+        if (dropdown) {
+            // Добавляем класс has-dropdown
+            item.classList.add('has-dropdown');
             
-            if (nav.classList.contains('active')) {
-                body.style.overflow = 'hidden';
-            } else {
-                body.style.overflow = '';
+            // Берем ссылку
+            const link = item.querySelector('a');
+            
+            if (link) {
+                // Сохраняем оригинальный текст ссылки
+                const linkText = link.textContent;
+                
+                // Создаем новый HTML
+                link.innerHTML = `
+                    <span class="link-text">${linkText}</span>
+                    <button class="dropdown-toggle">›</button>
+                `;
+                
+                // Добавляем обработчик для текста ссылки
+                const textSpan = link.querySelector('.link-text');
+                textSpan.addEventListener('click', handleLinkClick);
+                
+                // Добавляем обработчик для стрелочки
+                const toggleBtn = link.querySelector('.dropdown-toggle');
+                toggleBtn.addEventListener('click', toggleDropdown);
+            }
+        } else {
+            // Для обычных ссылок просто добавляем обработчик
+            const link = item.querySelector('a');
+            if (link) {
+                link.addEventListener('click', handleLinkClick);
             }
         }
-
+    });
+    
+    // Обработчики для ссылок в выпадающих меню
+    document.querySelectorAll('.mobile-dropdown a').forEach(link => {
+        link.addEventListener('click', function(event) {
+            if (window.innerWidth <= 1442) {
+                // Закрываем меню после клика на подпункт
+                setTimeout(() => {
+                    toggleMobileMenu();
+                }, 200);
+            }
+        });
+    });
+    
+    // Обработчик для оверлея
+    const overlay = document.getElementById('mobileNavOverlay');
+    if (overlay) {
+        overlay.addEventListener('click', toggleMobileMenu);
+    }
+    
+    // Обработчик для телеграма в мобильном меню
+    const mobileTelegram = document.querySelector('.mobile-telegram');
+    if (mobileTelegram) {
+        mobileTelegram.addEventListener('click', function(event) {
+            if (window.innerWidth <= 1442) {
+                // Открываем в новой вкладке, но закрываем меню
+                setTimeout(() => {
+                    toggleMobileMenu();
+                }, 100);
+            }
+        });
+    }
+    
+    // Логика для десктопных выпадающих меню
+    const desktopNavItems = document.querySelectorAll('.desktop-nav .nav-item');
+    
+    desktopNavItems.forEach(item => {
+        const dropdown = item.querySelector('.dropdown');
+        
+        if (dropdown) {
+            let hideTimeout;
+            
+            const showDropdown = () => {
+                if (window.innerWidth > 1442) {
+                    clearTimeout(hideTimeout);
+                    dropdown.style.display = 'flex';
+                    setTimeout(() => {
+                        dropdown.style.opacity = '1';
+                        dropdown.style.visibility = 'visible';
+                    }, 10);
+                }
+            };
+            
+            const hideDropdown = () => {
+                if (window.innerWidth > 1442) {
+                    hideTimeout = setTimeout(() => {
+                        dropdown.style.opacity = '0';
+                        dropdown.style.visibility = 'hidden';
+                        setTimeout(() => {
+                            dropdown.style.display = 'none';
+                        }, 200);
+                    }, 300);
+                }
+            };
+            
+            // Для десктопа
+            item.addEventListener('mouseenter', showDropdown);
+            item.addEventListener('mouseleave', hideDropdown);
+            dropdown.addEventListener('mouseenter', showDropdown);
+            dropdown.addEventListener('mouseleave', hideDropdown);
+        }
+    });
+    
+    // Обработка изменения размера окна
+    window.addEventListener('resize', function() {
+        // Закрываем мобильное меню при переходе на десктоп
+        if (window.innerWidth > 1442) {
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+            const burger = document.querySelector('.burger');
+            
+            if (mobileNav && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                if (mobileNavOverlay) mobileNavOverlay.classList.remove('active');
+                if (burger) burger.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            // Закрываем все выпадающие меню в мобильной версии
+            document.querySelectorAll('.mobile-nav-menu .nav-item.active').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+    });
+});
         function toggleFaq(element) {
             const faqItem = element.closest('.faq-item');
             const isActive = faqItem.classList.contains('active');

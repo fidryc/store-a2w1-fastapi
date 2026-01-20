@@ -1,10 +1,12 @@
 from app.repositories.interfaces.abc_base_uow import IBaseUOW
-from app.schemas.dto import CollectionDTO, ProductDTO, ProductWithCategoriesDTO, ProductWithCollectionDTO, ProductWithPhotoDTO, SizeDTO
+from app.schemas.dto import CollectionCategoryDTO, CollectionDTO, CollectionWithDetailsDTO, ProductDTO, ProductWithCategoriesDTO, ProductWithCollectionDTO, ProductWithPhotoDTO, SizeDTO
 from app.services.interfaces.abc_product_service import IProductService
 from app.repositories.exceptions.base_exc import RepositoryExc
 from app.core.logger import logger
 from app.services.exceptions.product import ProductServiceException
 from app.services.interfaces.abc_collection_sertice import ICollectionService
+from app.schemas.filters import CollectionCategoryFilters
+from app.services.exceptions.collection import CollectionServiceException
 
 
 class ProductService(IProductService):
@@ -16,7 +18,7 @@ class ProductService(IProductService):
         self,
         id: int,
         desc_photo=False
-    ) -> dict[str, ProductWithPhotoDTO | list[SizeDTO] | CollectionDTO | None]:
+    ) -> dict[str, ProductWithPhotoDTO | list[SizeDTO] | CollectionWithDetailsDTO | None]:
         """Получение продукта с фото, с возможными вариантами размеров, с коллекцией"""
         try:
             products = await self.uow.product_repo.products_with_photo_by_filters(id=id)
@@ -35,7 +37,7 @@ class ProductService(IProductService):
         if product.collection_id:
             try:
                 collection = await self.collection_service.collection_by_id(collection_id=product.collection_id)
-            except RepositoryExc as e:
+            except CollectionServiceException as e:
                 raise ProductServiceException("Ошибка получение коллекции продукта", status_code=500) from e
         product.photos = sorted(product.photos, key=lambda x: x.sort_order, reverse=desc_photo)
         return {"product": product, "sizes": sizes, "collection": collection}
