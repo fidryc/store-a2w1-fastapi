@@ -42,10 +42,8 @@
             {% endif %}
             <div class="collection-main-image">
                 {% if collection %}
-                    <a href="/collection/{{ collection.id }}">
-                        <img src="/static/uploads/{{ collection.photo.file_path }}.jpg"
-                             alt="{{ collection.title }}">
-                    </a>
+                    <img src="/static/uploads/{{ collection.photo.file_path }}.jpg"
+                            alt="{{ collection.title }}">
                 {% else %}
                     <img src="/static/images/{{ placeholder_images[loop.index - 1] }}" alt="">
                 {% endif %}
