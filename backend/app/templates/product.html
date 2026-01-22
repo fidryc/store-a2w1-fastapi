@@ -3,6 +3,18 @@
 
 {% if product.product %}
 <div class="product-section">
+    <!-- Название товара (мобильная версия) -->
+    <div class="product-header mobile-only">
+        {% if category %}
+        <div class="collection-title">{{ category.title }}</div>
+        {% endif %}
+        {% if product.collection %}
+            <h1 class="product-title">{{ product.collection.collection_category.title }}<br>{{ product.collection.title }}</h1>
+        {% else %}
+            <h1 class="product-title">{{ product.product.title }}</h1>
+        {% endif %}
+    </div>
+
     <!-- Галерея фотографий -->
     <div class="product-gallery">
         <div class="gallery-main" id="productGallery">
@@ -15,11 +27,9 @@
                 {% endfor %}
                 
                 {% if product.product.photos|length > 1 %}
-                <!-- Стрелки навигации -->
                 <div class="gallery-arrow prev" onclick="changeProductPhoto(-1)">‹</div>
                 <div class="gallery-arrow next" onclick="changeProductPhoto(1)">›</div>
                 
-                <!-- Точки навигации -->
                 <div class="gallery-nav">
                     {% for photo in product.product.photos %}
                     <div class="gallery-dot {% if loop.first %}active{% endif %}" 
@@ -35,17 +45,21 @@
 
     <!-- Информация о товаре -->
     <div class="product-info">
-        {% if category %}
-        <div class="collection-title">{{ category.title }}</div>
-        {% endif %}
-        {% if product.collection %}
-            <h1 class="product-title">{{ product.collection.collection_category.title }}<br>{{ product.collection.title }}</h1>
-        {% else %}
-            <h1 class="product-title">{{ product.product.title }}</h1>
-        {% endif %}
-        
+        <!-- Название товара (десктопная версия) -->
+        <div class="product-header desktop-only">
+            {% if category %}
+            <div class="collection-title">{{ category.title }}</div>
+            {% endif %}
+            {% if product.collection %}
+                <h1 class="product-title">{{ product.collection.collection_category.title }}<br>{{ product.collection.title }}</h1>
+            {% else %}
+                <h1 class="product-title">{{ product.product.title }}</h1>
+            {% endif %}
+        </div>
+
+        <!-- Описание (десктопная версия - сразу после заголовка) -->
         {% if product.product.description %}
-            <div class="product-description">
+            <div class="product-description desktop-only">
                 {% for part in product.product.description.split(';') %}
                     <div class="product-description__item">{{ part|trim }}</div>
                 {% endfor %}
@@ -54,13 +68,15 @@
 
         <!-- Размеры -->
         {% if product.sizes %}
-        <div class="sizes-label">Размер:</div>
-        <div class="sizes-grid">
-            {% for size in product.sizes %}
-            <button class="size-button" onclick="selectProductSize(this)">
-                {{ size.title }}
-            </button>
-            {% endfor %}
+        <div class="product-sizes">
+            <div class="sizes-label">Размер:</div>
+            <div class="sizes-grid">
+                {% for size in product.sizes %}
+                <button class="size-button" onclick="selectProductSize(this)">
+                    {{ size.title }}
+                </button>
+                {% endfor %}
+            </div>
         </div>
         {% endif %}
 
@@ -76,6 +92,15 @@
                 {% if product.product.simple_quantity == 0 %}disabled{% endif %}>
             {% if product.product.simple_quantity > 0 %}Заказать{% else %}Нет в наличии{% endif %}
         </button>
+
+        <!-- Описание (мобильная версия - после кнопки) -->
+        {% if product.product.description %}
+            <div class="product-description mobile-only">
+                {% for part in product.product.description.split(';') %}
+                    <div class="product-description__item">{{ part|trim }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </div>
 {% else %}

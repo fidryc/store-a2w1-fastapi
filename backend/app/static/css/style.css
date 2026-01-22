@@ -630,7 +630,6 @@ footer section {
     .mobile-only {
         display: block;
         margin-top: 30px;
-        text-decoration: underline;
     }
 }
 
@@ -1077,6 +1076,7 @@ footer section {
     display: block;
 }
 
+
 .red-text {
     position: absolute;
     left: 50%;
@@ -1444,6 +1444,15 @@ footer section {
     grid-template-columns: 1fr 1fr;
     gap: 60px;
     padding: 120px 0 80px;
+    align-items: start;
+}
+
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
 }
 
 .gallery-main {
@@ -1503,6 +1512,7 @@ footer section {
     cursor: pointer;
     transition: all 0.3s;
     z-index: 10;
+    font-size: 24px;
 }
 
 .gallery-arrow:hover {
@@ -1518,14 +1528,72 @@ footer section {
     right: 20px;
 }
 
-.gallery-arrow.hidden {
-    display: none;
-}
-
 .product-info {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    height: 100%;
+    max-height: calc((100vw - 120px) / 2 * 4 / 3);
+    overflow: hidden;
+}
+
+.product-description.desktop-only {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.product-info .order-button {
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+/* МОБИЛЬНАЯ ВЕРСИЯ */
+@media (max-width: 768px) {
+    .product-section {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 80px 20px 40px;
+    }
+    
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+    
+    .product-info {
+        max-height: none;
+    }
+    
+    .product-info .order-button {
+        margin-top: 0;
+    }
+    
+    .gallery-arrow {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+    
+    .gallery-arrow.prev {
+        left: 10px;
+    }
+    
+    .gallery-arrow.next {
+        right: 10px;
+    }
+    
+    .gallery-dot {
+        width: 15px;
+        height: 15px;
+    }
+    
+    .gallery-nav {
+        gap: 30px;
+    }
 }
 
 .collection-title {
@@ -1540,13 +1608,11 @@ footer section {
     font-size: 64px;
     font-weight: 400;
     line-height: 1.1;
-    text-transform: uppercase;
-    margin-bottom: 106px;
+    margin-bottom: 34px;
 }
 
 .product-description {
     font-size: 28px;
-    margin-bottom: 59px;
 }
 
 .product-description__item {
@@ -1708,7 +1774,6 @@ footer section {
 .product-image {
     width: 100%;
     aspect-ratio: 3/4;
-    overflow: hidden;
     background-color: #1a1a1a;
     margin-bottom: 15px;
 }
@@ -2491,8 +2556,8 @@ footer section {
     }
     
     .product-title {
-        font-size: 28px;
-        margin-bottom: 30px;
+        font-size: 48px;
+        margin-bottom: 10px;
     }
     
     .product-description {
@@ -2652,7 +2717,7 @@ footer section {
     
     /* Product page */
     .product-title {
-        font-size: 24px;
+        font-size: 32px;
     }
     
     .product-description {
