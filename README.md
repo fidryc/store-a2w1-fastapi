@@ -224,13 +224,4 @@ DELETE /api/v1/images/delete-file
 * Работа с изображениями
 * Docker окружение
 
----
-
-## 👨‍💻 Автор
-
-Backend Developer (Python)
-
-Проект создан как pet/commercial style проект для демонстрации навыков разработки backend приложений.
-
-
 [Watch demo](https://youtu.be/_jhBTeTaGyQ)
