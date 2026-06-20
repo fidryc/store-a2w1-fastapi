@@ -12,8 +12,6 @@ https://github.com/user-attachments/assets/5395c334-f00f-42b2-95ae-6655d314122d
 
 [Демо с лучшим качеством](https://www.youtube.com/watch?v=_jhBTeTaGyQ)
 
-
----
 ---
 ## 📷 Screenshots
 
