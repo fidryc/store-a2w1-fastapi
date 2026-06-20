@@ -106,7 +106,7 @@ backend/
 ### 1. Клонирование проекта
 
 ```bash
-git clone <repository_url>
+git clone https://github.com/fidryc/store-a2w1-fastapi.git
 
 ```
 
