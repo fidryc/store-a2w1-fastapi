@@ -159,7 +159,6 @@ async def product_by_id(
     product_service = ProductService(uow=uow, collection_service=CollectionService(uow))
     try:
         product = await product_service.product_with_details(id=product_id)
-        print(product)
         return templates.TemplateResponse(
                 request=request, 
                 name="product.html", 
@@ -173,3 +172,6 @@ async def product_by_id(
         raise HTTPException(e.status_code, e.args[0])
         
         
+@router.get("/admin-login", response_class=HTMLResponse)
+async def admin_login_page(request: Request):
+    return templates.TemplateResponse("admin_login.html", {"request": request})

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход в админку</title>
+</head>
+<body>
+
+<h2>Вход в админку</h2>
+
+<form id="loginForm" autocomplete="off">
+    <div>
+        <input name="email" type="email" placeholder="Email" autocomplete="username" required />
+    </div>
+
+    <div>
+        <input name="pwd" type="password" placeholder="Пароль" autocomplete="current-password" required />
+    </div>
+
+    <button type="button" id="loginBtn">Войти</button>
+</form>
+
+<p id="error" style="color:red;"></p>
+
+<script>
+document.getElementById("loginBtn").addEventListener("click", async () => {
+    const form = document.getElementById("loginForm");
+    const errorEl = document.getElementById("error");
+    errorEl.textContent = "";
+
+    try {
+        const response = await fetch("/api/v1/users/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                email: form.email.value,
+                pwd: form.pwd.value
+            })
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            errorEl.textContent = data.detail || "Ошибка входа";
+            return;
+        }
+
+        window.location.href = "/admin";
+
+    } catch (err) {
+        errorEl.textContent = "Ошибка соединения";
+    }
+});
+</script>
+
+</body>
+</html>

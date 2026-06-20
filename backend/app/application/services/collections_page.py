@@ -18,7 +18,6 @@ class CollectionsPageService:
     async def get_collection_by_id_page_data(self, collection_id: int) -> CollectionByIdPageResponse:
         collection = await self.collection_service.collection_by_id(collection_id=collection_id)
         products = await self.collection_service.products_by_collection_id(collection_id=collection_id)
-        
         grouped = await self._group_products_by_base_cat(
             products=products,
             collection_id=collection_id  # Получаем лимиты

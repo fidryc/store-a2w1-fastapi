@@ -10,21 +10,20 @@ from app.core.logger import logger
 from app.constants.files import Paths
 
 class PhotoService:
-    def __init__(self, uow: IBaseUOW, file_optimizer = None):
+    def __init__(self, uow: IBaseUOW):
         self.uow = uow
-        # self.file_optimizer = file_optimizer
         
     @staticmethod
     def __validate_file_name(file_path: str):
         if not isinstance(file_path, str):
             raise PhotoServiceException(
                 "Имя файла должно быть строкой",
-                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
             )
         if any(symbol in file_path for symbol in ("/", "\\", ".")):
             raise PhotoServiceException(
                 "Имя имеет неверный формат. Уберите символы '\' или '/' или '.'",
-                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
             )
     
     async def add(self, file: bytes, file_path: str) -> int:
@@ -47,16 +46,6 @@ class PhotoService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             ) from e
             
-        # try:
-        #     optimize_file = self.file_optimizer.optimize_file()
-        # except FileOptimizerException as e:
-        #     logger.warning(
-        #         "Failed optimize file",
-        #         exc_info=True,
-        #         extra={"file": file}
-        #     )
-        # if optimize_file:
-        #     file = optimize_file
         try:
             async with aiofiles.open(f"{Paths.UPLOADS_DIR}/{file_path}.jpg", "wb") as f:
                 await f.write(file)

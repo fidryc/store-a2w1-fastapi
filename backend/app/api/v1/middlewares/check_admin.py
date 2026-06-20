@@ -7,7 +7,7 @@ from app.services.implementations.user_service import UserService
 from app.services.exceptions.user import UserServiceException
 from app.schemas.dataclasses import AuthTokens
 from app.core.config import settings
-from app.utils.jwt.jwt import set_token
+from app.utils.jwt_utils.jwt_utils import set_token
 
 
 class IsAdminMiddleware(BaseHTTPMiddleware):

@@ -1,10 +1,10 @@
 from app.core.logger import logger
 
-from app.utils.jwt.jwt import create_token, get_token_payload, validate_payload_fields
+from app.utils.jwt_utils.jwt_utils import create_token, get_token_payload, validate_payload_fields
 from app.repositories.interfaces.abc_base_uow import IBaseUOW
 from app.services.exceptions.user import UserServiceException
 from app.utils.hashing import check_pwd, get_hash
-from app.utils.jwt.exceptions import AbsenceAccessJWTExc, AbsenceRefreshJWTExc, TimeExpireAccessJWTExc, TimeExpireRefreshJWTExc
+from app.utils.jwt_utils.exceptions import AbsenceAccessJWTExc, AbsenceRefreshJWTExc, TimeExpireAccessJWTExc, TimeExpireRefreshJWTExc
 from app.schemas.dto import UserDTO
 from app.repositories.exceptions.base_exc import RepositoryExc
 from app.schemas.dataclasses import AuthTokens

@@ -22,7 +22,7 @@ class ProductVariantRepository(IProductVariantRepository, BaseSQLAlchemyReposito
     
     async def color_variation_of_product(self, product_id: int) -> list[ColorDTO]:
         query = text("""
-                     SELECT DISTINCT colors.id, colors.title, colors.hex
+                     SELECT DISTINCT colors.id, colors.title, colors.hex_code
                     FROM product_variants
                     LEFT JOIN sizes ON product_variants.size_id = sizes.id
                     WHERE product_variants.product_id = :product_id
